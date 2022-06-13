@@ -19,17 +19,17 @@ parser.add_argument('--seed', type=int, default=616,
 #                     help='number of total time steps to train (default: 10e5)')
 parser.add_argument('--env', default='Arm-v3',
                     help='environment to train on (default: Arm-v1)(Hopper-v3)')
-parser.add_argument('--MAX_EPISODES_TRAIN', default=200, type=int,
+parser.add_argument('--MAX_EPISODES_TRAIN', default=500, type=int,
                     help='Max number of total train episodes:(default:100)')
 parser.add_argument('--MAX_EPISODES_TEST', default=50, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=1000, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=2000, type=int,
                     help='Max number of steps per episode (default: 1000')
-parser.add_argument('--explore_noise', default=0.02, type=int,
+parser.add_argument('--explore_noise', default=1, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
-parser.add_argument('--MEMORY_CAPACITY', default=40000, type=int,
+parser.add_argument('--MEMORY_CAPACITY', default=80000, type=int,
                     help='Max number of memory_capacity (default: 20000')
-parser.add_argument('--mode', default='test', type=str,
+parser.add_argument('--mode', default='train', type=str,
                     help="mode='train' or 'test' (default: test)")
 parser.add_argument('--load', default=True, type=bool,
                     help="load model False True (default: False)")  # load model False True
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     s_dim = env.observation_space.shape[0]
     a_dim = env.action_space.shape[0]
-    a_dim = 3
+    a_dim = 4
 
     a_bound = env.action_space.high
     agent = DDPG(state_dim=s_dim,
@@ -79,7 +79,7 @@ if __name__ == '__main__':
                 # Add exploration noise
                 action = agent.choose_action_train(s)
                 # action = action + s[0:7]
-                action = action + s[0:3]
+                action = action + s[0:4]
 
                 # action = np.clip(action, -a_bound, a_bound)
 
@@ -103,16 +103,13 @@ if __name__ == '__main__':
             s = env.reset()
             ep_reward = 0
             for j in range(args.MAX_EP_STEPS):
-                # if  45 < j
+                # if  45 < j:
+                #     env.render()
                 # env.render()
 
                 # Add exploration noise
                 action = agent.choose_action_train(s)
-                # action = action + s[0:7]
-
-                action = action + s[0:3]
-
-
+                action = action + s[0:4]
                 # action = np.clip(action, -a_bound, a_bound)
 
                 s_, r, done, info = env.step(action)
@@ -134,7 +131,7 @@ if __name__ == '__main__':
             plt.plot(ep_reward1)
 
             if i >= 40:
-                args.explore_noise *= 0.99
+                args.explore_noise *= 0.98
 
             if i % 50 == 49:
                 plt.show()

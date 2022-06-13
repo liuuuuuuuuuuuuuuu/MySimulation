@@ -19,8 +19,8 @@ torch.set_default_dtype(torch.float)
 
 # current_file = os.path.abspath(os.path.join(os.getcwd(), ".."))  # 获取上一级目录的名字
 current_file = os.getcwd()  # 获取当前目录的名字
-date_save = "0611"
-date_load = "0611"
+date_save = "0612-1"
+date_load = "0612"
 directory_save = current_file + '/train_log/' + '/' + date_save
 directory_load = current_file + '/train_log/' + '/' + date_load
 
@@ -101,7 +101,7 @@ class Critic(nn.Module):
 # Deep Deterministic Policy Gradient
 class DDPG(object):
     def __init__(self, state_dim, action_dim, replacement,  explore_noise, memory_capacity=1000, gamma=0.9, lr_a=0.0001,
-                 lr_c=0.0001, batch_size=512):
+                 lr_c=0.0001, batch_size=2048):
         super(DDPG, self).__init__()
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -139,7 +139,7 @@ class DDPG(object):
     def choose_action_train(self, s):
         s = torch.FloatTensor(s).to(device)
         action_ = self.actor(s)
-        action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=3)).to(device)
+        action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=4)).to(device)
         action = action_ + action_noise
         action = action.detach().cpu()
         action = np.clip(action, -0.1 / 180 * np.pi, 0.1 / 180 * np.pi)
@@ -236,13 +236,13 @@ class DDPG(object):
 
     def load(self):
         self.actor_target.load_state_dict(
-            torch.load(directory_load + "/" + "149_actor.pth"))
+            torch.load(directory_load + "/" + "499_actor.pth"))
         self.actor.load_state_dict(
-            torch.load(directory_load + "/" + "149_actor.pth"))
+            torch.load(directory_load + "/" + "499_actor.pth"))
         self.critic.load_state_dict(
-            torch.load(directory_load + "/" + "149_critic.pth"))
+            torch.load(directory_load + "/" + "499_critic.pth"))
         self.critic_target.load_state_dict(
-            torch.load(directory_load + "/" + "149_critic.pth"))
+            torch.load(directory_load + "/" + "499_critic.pth"))
         print("====================================")
         print("Model has been loaded...")
         print("====================================")
