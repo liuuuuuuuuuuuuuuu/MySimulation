@@ -19,29 +19,31 @@ parser.add_argument('--seed', type=int, default=616,
 #                     help='number of total time steps to train (default: 10e5)')
 parser.add_argument('--env', default='Arm-v3',
                     help='environment to train on (default: Arm-v1)(Hopper-v3)')
-parser.add_argument('--MAX_EPISODES_TRAIN', default=500, type=int,
+parser.add_argument('--MAX_EPISODES_TRAIN', default=20, type=int,
                     help='Max number of total train episodes:(default:100)')
-parser.add_argument('--MAX_EPISODES_TEST', default=50, type=int,
+parser.add_argument('--MAX_EPISODES_TEST', default=500, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=2000, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=1000, type=int,
                     help='Max number of steps per episode (default: 1000')
 parser.add_argument('--explore_noise', default=1, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
-parser.add_argument('--MEMORY_CAPACITY', default=80000, type=int,
+parser.add_argument('--MEMORY_CAPACITY', default=10000, type=int,
                     help='Max number of memory_capacity (default: 20000')
 parser.add_argument('--mode', default='train', type=str,
                     help="mode='train' or 'test' (default: test)")
-parser.add_argument('--load', default=True, type=bool,
+parser.add_argument('--load', default=False, type=bool,
                     help="load model False True (default: False)")  # load model False True
 parser.add_argument('--log_interval', default=50, type=int,
                     help="每多少episode保存一次神经网络")
 
 # (3) 读取命令行参数并解析
-args = parser.parse_args()
+# args = parser.parse_args()
+args = parser.parse_args(args=[])
 
 if __name__ == '__main__':
 
     t1 = time.time()
+    result_total = []
 
     # hyper parameters
     REPLACEMENT = [
@@ -67,7 +69,7 @@ if __name__ == '__main__':
                  memory_capacity=args.MEMORY_CAPACITY)
     if args.mode == 'test':
         agent.load()
-        ep_reward1 = []
+        ep_reward_total1 = []
         for i in range(args.MAX_EPISODES_TEST):
             s = env.reset()
             ep_reward = 0
@@ -94,11 +96,15 @@ if __name__ == '__main__':
                     print('Episode:', i, "done: ", done, ' Reward: %i' % int(ep_reward),
                           'Explore: %.2f' % args.explore_noise, )
                     break
+                ep_reward_total1.append(ep_reward)
+                plt.plot(ep_reward_total1)
+            if i % 50 == 49:
+                plt.show()
 
     elif args.mode == 'train':
         if args.load:
             agent.load()
-        ep_reward1 = []
+        result_ep_reward = []
         for i in range(args.MAX_EPISODES_TRAIN):
             s = env.reset()
             ep_reward = 0
@@ -122,13 +128,15 @@ if __name__ == '__main__':
                 s = s_
                 ep_reward += r
                 if done or j == args.MAX_EP_STEPS - 1:
-                    print('Episode:', i, ' Reward: %i' % int(ep_reward), 'Explore: %.2f' % args.explore_noise, )
-                    if ep_reward > -300:
-                        RENDER = True
+                    print('Episode:', i, "done: ", done, ' Reward: %i' % int(ep_reward),
+                          'Explore: %.2f' % args.explore_noise, )
+                    result1=np.array(['Episode:', i, "done: ", done, ' Reward:', int(ep_reward),
+                          'Explore:', args.explore_noise])
+                    result_total.append(result1)
                     break
 
-            ep_reward1.append(ep_reward)
-            plt.plot(ep_reward1)
+            result_ep_reward.append(ep_reward)
+            plt.plot(result_ep_reward)
 
             if i >= 40:
                 args.explore_noise *= 0.98
@@ -139,6 +147,8 @@ if __name__ == '__main__':
             if i % args.log_interval == 49:
                 agent.save(i)
 
+        np.save("result_total_data", result_total)
+        np.save("result_ep_reward_data", result_ep_reward)
     else:
         raise NameError("mode wrong!!!")
 
