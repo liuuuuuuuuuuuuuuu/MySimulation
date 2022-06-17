@@ -90,13 +90,13 @@ data = np.load("total_data.npy")
 
 
 loss1 = []
-for epoch in range(20000):
+for epoch in range(100000):
 
     data = torch.FloatTensor(data)
     data = list(np.array(data))
-    data_batch = random.sample(data, 2048)
+    data_batch = random.sample(data, 4096)
 
-    data_batch = np.array(data_batch).reshape(2048, 20)
+    data_batch = np.array(data_batch).reshape(4096, 20)
 
     s = data_batch[:,:13]
     y = data_batch[:,13:]
@@ -113,11 +113,11 @@ for epoch in range(20000):
 
     loss1.append(loss.detach().cpu())
     plt.plot(loss1)
-    if epoch % 1000 ==999:
+    if epoch % 10000 ==9999:
        plt.show()
 
     loss.backward()
     optimizer.step()
 
-    if epoch % 1000 == 999:
+    if epoch % 10000 == 9999:
         torch.save(actor.state_dict(), str(epoch) + 'pretrain_actor.pth')
