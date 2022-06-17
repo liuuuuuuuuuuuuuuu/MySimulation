@@ -19,15 +19,15 @@ parser.add_argument('--seed', type=int, default=616,
 #                     help='number of total time steps to train (default: 10e5)')
 parser.add_argument('--env', default='Arm-v3',
                     help='environment to train on (default: Arm-v1)(Hopper-v3)')
-parser.add_argument('--MAX_EPISODES_TRAIN', default=20, type=int,
+parser.add_argument('--MAX_EPISODES_TRAIN', default=2000, type=int,
                     help='Max number of total train episodes:(default:100)')
 parser.add_argument('--MAX_EPISODES_TEST', default=500, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=1000, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=100, type=int,
                     help='Max number of steps per episode (default: 1000')
 parser.add_argument('--explore_noise', default=1, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
-parser.add_argument('--MEMORY_CAPACITY', default=10000, type=int,
+parser.add_argument('--MEMORY_CAPACITY', default=200000, type=int,
                     help='Max number of memory_capacity (default: 20000')
 parser.add_argument('--mode', default='train', type=str,
                     help="mode='train' or 'test' (default: test)")
@@ -141,11 +141,13 @@ if __name__ == '__main__':
             if i >= 40:
                 args.explore_noise *= 0.98
 
-            if i % 50 == 49:
-                plt.show()
-
             if i % args.log_interval == 49:
+                # 保存神经网络
                 agent.save(i)
+                # 保存训练结果
+                np.save("result_total_data", result_total)
+                np.save("result_ep_reward_data", result_ep_reward)
+                plt.show()
 
         np.save("result_total_data", result_total)
         np.save("result_ep_reward_data", result_ep_reward)

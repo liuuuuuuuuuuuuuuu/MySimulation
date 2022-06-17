@@ -5,14 +5,14 @@
       <paths name="root@region-3.autodl.com:43842">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/Arm_7dof_single" />
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/小程序" />
           </mappings>
         </serverdata>
       </paths>
       <paths name="root@region-41.autodl.com:20149">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/Arm_7dof_single/position_control" />
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/小程序" />
           </mappings>
         </serverdata>
       </paths>

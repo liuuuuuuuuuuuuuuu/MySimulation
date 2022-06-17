@@ -9,8 +9,7 @@ import numpy as np
 import torch.nn as nn
 import os
 
-use_cuda = torch.cuda.is_available()
-device = torch.device("cuda" if use_cuda else "cpu")
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 seed = 1
 torch.manual_seed(seed)
