@@ -6,26 +6,34 @@ import numpy as np
 from DDPG import DDPG
 import argparse
 
+from test_jacobain import Jacobian_inverse
+
 # 设置参数变量
 # (1) 声明一个parser（解析器）
 parser = argparse.ArgumentParser()
 
 # (2) 添加参数
-parser.add_argument('--seed', type=int, default=616,
+parser.add_argument('--seed', type=int, default=615,
                     help='random seed (default: 616)')
 # parser.add_argument('--test_every_steps', type=int, default=5,
 #                     help='eval interval (default: 10)')
 # parser.add_argument('--train_total_steps', type=int, default=10e7,
 #                     help='number of total time steps to train (default: 10e5)')
+
+# Arm-v1:ArmEnv_3dof_position
+# Arm-v2:ArmEnv_3dof_control
+# Arm-v3:ArmEnv_7dof_single位置控制
+# Arm-v4:ArmEnv_7dof_double
+
 parser.add_argument('--env', default='Arm-v3',
-                    help='environment to train on (default: Arm-v1)(Hopper-v3)')
+                    help='environment to train on (default: Arm-v3)')
 parser.add_argument('--MAX_EPISODES_TRAIN', default=2000, type=int,
                     help='Max number of total train episodes:(default:100)')
 parser.add_argument('--MAX_EPISODES_TEST', default=500, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=100, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=100000, type=int,
                     help='Max number of steps per episode (default: 1000')
-parser.add_argument('--explore_noise', default=1, type=int,
+parser.add_argument('--explore_noise', default=0.0001, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
 parser.add_argument('--MEMORY_CAPACITY', default=200000, type=int,
                     help='Max number of memory_capacity (default: 20000')
@@ -59,7 +67,6 @@ if __name__ == '__main__':
 
     s_dim = env.observation_space.shape[0]
     a_dim = env.action_space.shape[0]
-    a_dim = 4
 
     a_bound = env.action_space.high
     agent = DDPG(state_dim=s_dim,
@@ -81,9 +88,11 @@ if __name__ == '__main__':
                 # Add exploration noise
                 action = agent.choose_action_train(s)
                 # action = action + s[0:7]
-                action = action + s[0:4]
+                action = action + s[0:7]
 
                 # action = np.clip(action, -a_bound, a_bound)
+
+                action = Jacobian_inverse(s[:10])
 
                 s_, r, done, info = env.step(action)
 
@@ -111,12 +120,14 @@ if __name__ == '__main__':
             for j in range(args.MAX_EP_STEPS):
                 # if  45 < j:
                 #     env.render()
-                # env.render()
+                env.render()
 
                 # Add exploration noise
                 action = agent.choose_action_train(s)
-                action = action + s[0:4]
+                action = action + s[0:7]
                 # action = np.clip(action, -a_bound, a_bound)
+
+                action = Jacobian_inverse(s[:13])
 
                 s_, r, done, info = env.step(action)
 

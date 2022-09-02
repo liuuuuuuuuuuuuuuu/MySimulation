@@ -19,7 +19,7 @@ torch.set_default_dtype(torch.float)
 # current_file = os.path.abspath(os.path.join(os.getcwd(), ".."))  # 获取上一级目录的名字
 current_file = os.getcwd()  # 获取当前目录的名字
 date_save = "0612-1"
-date_load = "0612"
+date_load = "0617"
 directory_save = current_file + '/train_log/' + '/' + date_save
 directory_load = current_file + '/train_log/' + '/' + date_load
 
@@ -48,9 +48,11 @@ class Actor(nn.Module):
 
         self.l2 = nn.Linear(300, 500)
         self.l3 = nn.Linear(500, 1000)
-        self.l4 = nn.Linear(1000, 500)
-        self.l5 = nn.Linear(500, 300)
-        self.l6 = nn.Linear(300, action_dim)
+        self.l4 = nn.Linear(1000, 1500)
+        self.l5 = nn.Linear(1500, 1000)
+        self.l6 = nn.Linear(1000, 500)
+        self.l7 = nn.Linear(500, 300)
+        self.l8 = nn.Linear(300, action_dim)
         # self.l8.weight.data.normal_(-0.0, 0.001)
         # self.l8.bias.data.fill_(0.001)
 
@@ -60,7 +62,11 @@ class Actor(nn.Module):
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
         x = F.relu(self.l5(x))
-        x = torch.tanh(self.l6(x))
+        x = F.relu(self.l6(x))
+        x = F.relu(self.l7(x))
+        x = torch.tanh(self.l8(x))
+        x = x*0.1
+
 
         # 对action进行放缩，实际上a in [-1,1]
         # scaled_a = x * self.action_bound
@@ -138,7 +144,7 @@ class DDPG(object):
     def choose_action_train(self, s):
         s = torch.FloatTensor(s).to(device)
         action_ = self.actor(s)
-        action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=4)).to(device)
+        action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=7)).to(device)
         action = action_ + action_noise
         action = action.detach().cpu()
         action = np.clip(action, -0.1 / 180 * np.pi, 0.1 / 180 * np.pi)
@@ -235,13 +241,13 @@ class DDPG(object):
 
     def load(self):
         self.actor_target.load_state_dict(
-            torch.load(directory_load + "/" + "499_actor.pth"))
+            torch.load(directory_load + "/" + "7999_actor.pth"))
         self.actor.load_state_dict(
-            torch.load(directory_load + "/" + "499_actor.pth"))
-        self.critic.load_state_dict(
-            torch.load(directory_load + "/" + "499_critic.pth"))
-        self.critic_target.load_state_dict(
-            torch.load(directory_load + "/" + "499_critic.pth"))
+            torch.load(directory_load + "/" + "7999_actor.pth"))
+        # self.critic.load_state_dict(
+        #     torch.load(directory_load + "/" + "7999_critic.pth"))
+        # self.critic_target.load_state_dict(
+        #     torch.load(directory_load + "/" + "7999_critic.pth"))
         print("====================================")
         print("Model has been loaded...")
         print("====================================")

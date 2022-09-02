@@ -5,7 +5,7 @@ import torch
 
 input_data =[]
 output_data = []
-total_data = []
+total_data = {}
 for i in range(100000):
     theta1 = random.uniform(-np.pi / 2, np.pi / 2)
     theta2 = random.uniform(-np.pi / 2, np.pi / 2)
@@ -681,7 +681,7 @@ for i in range(100000):
                             del_q[0][0],del_q[1][0],del_q[2][0],del_q[3][0],del_q[4][0],del_q[5][0],del_q[6][0]])
     input_data.append(input_data1)
     output_data.append(output_data1)
-    total_data.append(total_data1)
+    total_data[input_data1]=output_data1
     if i % 1000 == 999:
         print(i)
 

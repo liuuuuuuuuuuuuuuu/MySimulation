@@ -7,8 +7,6 @@ import torch
 import random
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-# device = 'cpu'
-
 
 # Actor：输入是state，输出的是一个确定性的action
 class Actor(nn.Module):
@@ -74,7 +72,7 @@ actor = Actor(state_dim=13, action_dim=7).to(device)
 #             torch.load("/home/liujian/桌面/single_arm_3dof_torch/DDPG/pre_train_7dof/pretrain_actor.pth"))
 
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(actor.parameters(), lr=0.01)
+optimizer = torch.optim.SGD(actor.parameters(), lr=0.0001)
 
 # s = np.load("input_data.npy")
 # y = np.load("output_data.npy")
@@ -88,15 +86,14 @@ optimizer = torch.optim.SGD(actor.parameters(), lr=0.01)
 data = np.load("total_data.npy")
 # data = data.reshape(300, 20)
 
-
 loss1 = []
 for epoch in range(100000):
 
     data = torch.FloatTensor(data)
     data = list(np.array(data))
-    data_batch = random.sample(data, 4096)
 
-    data_batch = np.array(data_batch).reshape(4096, 20)
+    data_batch = random.sample(data, 100000)
+    data_batch = np.array(data_batch).reshape(100000, 20)
 
     s = data_batch[:,:13]
     y = data_batch[:,13:]
@@ -119,5 +116,6 @@ for epoch in range(100000):
     loss.backward()
     optimizer.step()
 
-    if epoch % 10000 == 9999:
+    if epoch % 2000 == 1999:
+        np.save("loss" ,loss1)
         torch.save(actor.state_dict(), str(epoch) + 'pretrain_actor.pth')

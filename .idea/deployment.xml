@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="root@region-41.autodl.com:20149" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="root@region-3.autodl.com:43842">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/小程序" />
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/Arm_7dof_single" />
           </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/Arm_7dof_single/position_control/DDPG1_7_Pos/train_log" />
+          </excludedPaths>
         </serverdata>
       </paths>
-      <paths name="root@region-41.autodl.com:20149">
+      <paths name="root@region-4.autodl.com:45279">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/小程序" />
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/Arm_7dof_single" />
           </mappings>
         </serverdata>
       </paths>
