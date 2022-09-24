@@ -5,6 +5,9 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 import torch
 import random
+from torch.autograd import Variable
+
+import torch.utils.data as Data
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
@@ -15,20 +18,20 @@ class Actor(nn.Module):
         # self.action_bound = torch.FloatTensor(action_bound)
 
         # layer
-        self.l1 = nn.Linear(state_dim, 300)
+        self.l1 = nn.Linear(state_dim, 20)
         # 初始化神经网络的参数的两种方式
         # nn.init.normal_(self.l1.weight, -0.0, 0.001)
         # nn.init.constant_(self.l1.bias, 0.001)
         # self.l1.weight.data.normal_(0.,0.001)
         # self.l1.bias.data.fill_(0.001)
 
-        self.l2 = nn.Linear(300, 500)
-        self.l3 = nn.Linear(500, 1000)
-        self.l4 = nn.Linear(1000, 1500)
-        self.l5 = nn.Linear(1500, 1000)
-        self.l6 = nn.Linear(1000, 500)
-        self.l7 = nn.Linear(500, 300)
-        self.l8 = nn.Linear(300, action_dim)
+        self.l2 = nn.Linear(20, 20)
+        self.l3 = nn.Linear(20, 20)
+        self.l4 = nn.Linear(20, 20)
+        self.l5 = nn.Linear(20, 20)
+        self.l6 = nn.Linear(20, 20)
+        self.l7 = nn.Linear(20, 20)
+        self.l8 = nn.Linear(20, action_dim)
         # self.l8.weight.data.normal_(-0.0, 0.001)
         # self.l8.bias.data.fill_(0.001)
 
@@ -41,7 +44,7 @@ class Actor(nn.Module):
         x = F.relu(self.l6(x))
         x = F.relu(self.l7(x))
         x = torch.tanh(self.l8(x))
-        x = x*0.1
+        x = x*1
 
 
         # 对action进行放缩，实际上a in [-1,1]
@@ -67,12 +70,12 @@ class Actor(nn.Module):
         print("====================================")
 
 
-actor = Actor(state_dim=13, action_dim=7).to(device)
+actor = Actor(state_dim=18, action_dim=7).to(device)
 # actor.load_state_dict(
 #             torch.load("/home/liujian/桌面/single_arm_3dof_torch/DDPG/pre_train_7dof/pretrain_actor.pth"))
 
 criterion = torch.nn.MSELoss()
-optimizer = torch.optim.SGD(actor.parameters(), lr=0.0001)
+optimizer = torch.optim.SGD(actor.parameters(), lr=0.01)
 
 # s = np.load("input_data.npy")
 # y = np.load("output_data.npy")
@@ -83,39 +86,45 @@ optimizer = torch.optim.SGD(actor.parameters(), lr=0.0001)
 # y = np.clip(y, -0.04, 0.04)
 # y = torch.FloatTensor(y).to(device)
 
-data = np.load("total_data.npy")
-# data = data.reshape(300, 20)
+input_data = torch.from_numpy(np.load("input_data.npy").reshape(500000,18))*1000
+output_data = torch.from_numpy(np.load("output_data.npy").reshape(500000,7))
+
+torch_dataset = Data.TensorDataset(input_data, output_data)
+loader = Data.DataLoader(dataset=torch_dataset,
+                         batch_size=250000,
+                         shuffle=True,
+                         num_workers=8)
+
 
 loss1 = []
-for epoch in range(100000):
+for epoch in range(1000):
+    for step, data in enumerate(loader):
+        # 将数据从 train_loader 中读出来,一次读取的样本数是32个
+        inputs, outputs = data
+        # 将这些数据转换成Variable类型
+        inputs, outputs = Variable(inputs), Variable(outputs)
 
-    data = torch.FloatTensor(data)
-    data = list(np.array(data))
+        # print(input.size())
+        # print("epoch：", epoch, "的第", step, "个inputs", inputs.data.size(), "labels", outputs.data.size())
+        # print(inputs)
 
-    data_batch = random.sample(data, 100000)
-    data_batch = np.array(data_batch).reshape(100000, 20)
+        s = torch.tensor(inputs, dtype=torch.float).to(device)
+        y = torch.tensor(outputs, dtype=torch.float).to(device)
 
-    s = data_batch[:,:13]
-    y = data_batch[:,13:]
+        optimizer.zero_grad()
+        y_pred = actor(s)
 
-    s = torch.FloatTensor(s).to(device)
-    y = torch.FloatTensor(y).to(device)
+        loss = criterion(y_pred, y)
+        print(epoch, loss)
 
+        loss1.append(loss.detach().cpu())
+        plt.plot(loss1)
+        if (epoch+1) % 200 == 0:
+            plt.show()
 
-    optimizer.zero_grad()
-    y_pred = actor(s)
+        loss.backward()
+        optimizer.step()
 
-    loss = criterion(y_pred, y)
-    print(epoch, loss)
-
-    loss1.append(loss.detach().cpu())
-    plt.plot(loss1)
-    if epoch % 10000 ==9999:
-       plt.show()
-
-    loss.backward()
-    optimizer.step()
-
-    if epoch % 2000 == 1999:
-        np.save("loss" ,loss1)
-        torch.save(actor.state_dict(), str(epoch) + 'pretrain_actor.pth')
+        if (epoch+1) % 500 == 0:
+            np.save("loss", loss1)
+            torch.save(actor.state_dict(), str(epoch) + 'pretrain_actor.pth')

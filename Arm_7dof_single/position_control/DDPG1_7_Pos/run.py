@@ -27,11 +27,11 @@ parser.add_argument('--seed', type=int, default=615,
 
 parser.add_argument('--env', default='Arm-v3',
                     help='environment to train on (default: Arm-v3)')
-parser.add_argument('--MAX_EPISODES_TRAIN', default=2000, type=int,
+parser.add_argument('--MAX_EPISODES_TRAIN', default=5000, type=int,
                     help='Max number of total train episodes:(default:100)')
 parser.add_argument('--MAX_EPISODES_TEST', default=500, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=100000, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=3000, type=int,
                     help='Max number of steps per episode (default: 1000')
 parser.add_argument('--explore_noise', default=0.0001, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
@@ -90,9 +90,9 @@ if __name__ == '__main__':
                 # action = action + s[0:7]
                 action = action + s[0:7]
 
-                # action = np.clip(action, -a_bound, a_bound)
+                action = np.clip(action, -a_bound, a_bound)
 
-                action = Jacobian_inverse(s[:10])
+                # action = Jacobian_inverse(s[:10])
 
                 s_, r, done, info = env.step(action)
 
@@ -123,11 +123,12 @@ if __name__ == '__main__':
                 env.render()
 
                 # Add exploration noise
-                action = agent.choose_action_train(s)
-                action = action + s[0:7]
+                action_agent = agent.choose_action_train(s)
                 # action = np.clip(action, -a_bound, a_bound)
 
-                action = Jacobian_inverse(s[:13])
+                action_jacobian = Jacobian_inverse(s[:18])
+                action = action_jacobian + s[0:7]
+                # action = np.zeros(7)
 
                 s_, r, done, info = env.step(action)
 
@@ -144,6 +145,8 @@ if __name__ == '__main__':
                     result1=np.array(['Episode:', i, "done: ", done, ' Reward:', int(ep_reward),
                           'Explore:', args.explore_noise])
                     result_total.append(result1)
+                    print(info)
+                    # print(info['distance'])
                     break
 
             result_ep_reward.append(ep_reward)

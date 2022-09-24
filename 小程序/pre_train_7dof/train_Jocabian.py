@@ -1,12 +1,13 @@
 import numpy as np
 import random
 
+from predict_model import predict_model
 import torch
 
 input_data =[]
 output_data = []
 total_data = {}
-for i in range(100000):
+for i in range(500000):
     theta1 = random.uniform(-np.pi / 2, np.pi / 2)
     theta2 = random.uniform(-np.pi / 2, np.pi / 2)
     theta3 = random.uniform(-np.pi / 2, np.pi / 2)
@@ -15,637 +16,48 @@ for i in range(100000):
     theta6 = random.uniform(-np.pi / 2, np.pi / 2)
     theta7 = random.uniform(-np.pi / 2, np.pi / 2)
 
-    J11 = (np.cos(theta7) * (np.cos(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(theta4) * (
-                    np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                                                     np.cos(theta4) * (
-                                                         np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(
-                                                     theta3)) - np.sin(theta4) * (
-                                                                 np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(
-                                                             theta3) * np.sin(theta1)))) - np.sin(theta1) * np.sin(theta2) * np.sin(
-        theta6)) + np.sin(theta7) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(theta4) * (
-                    np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1))) - np.sin(theta5) * (
-                                              np.cos(theta4) * (
-                                                  np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(
-                                              theta1)) + np.sin(theta4) * (
-                                                          np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(
-                                                      theta3))))) * (
-                      (27 * np.cos(theta2) * np.sin(theta5) * np.sin(theta7)) / 20 + (
-                          47 * np.cos(theta2) * np.sin(theta6) * np.sin(theta7)) / 100 + (
-                                  37 * np.cos(theta7) * np.sin(theta2) * np.sin(theta6)) / 100 - (
-                                  37 * np.cos(theta2) * np.cos(theta6) * np.cos(theta7)) / 100 - (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.sin(theta5) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.sin(theta4) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta3) * np.cos(theta7) * np.sin(theta2) * np.sin(theta6)) / 20 - (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7)) / 20 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4) * np.sin(theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3) * np.sin(theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta7)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta5)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4)) / 100 + (
-                                  47 * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3)) / 100 + (
-                                  27 * np.cos(theta3) * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta6)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta6) * np.cos(theta7) * np.sin(theta4) * np.sin(theta5)) / 20 - (
-                                  37 * np.cos(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  111 * np.cos(theta3) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  111 * np.cos(theta4) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  111 * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta7)) / 100 - (
-                                  47 * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                                  27 * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta6) * np.cos(theta7) * np.sin(theta4) * np.sin(
-                              theta5)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta6) * np.cos(theta7) * np.sin(theta3) * np.sin(
-                              theta5)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta3) * np.sin(
-                              theta4)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta6)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta5)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta4)) / 100 + (
-                                  111 * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta3)) / 100 - (
-                                  47 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta3) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta6)) / 100 - (
-                                  47 * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(
-                              theta6)) / 100 - (
-                                  47 * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta6)) / 100 - (
-                                  111 * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta5)) / 100) + (np.sin(theta7) * (np.cos(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(theta4) * (
-                    np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                                                                                           np.cos(theta4) * (
-                                                                                               np.cos(theta1) * np.cos(
-                                                                                           theta3) - np.cos(theta2) * np.sin(
-                                                                                           theta1) * np.sin(theta3)) - np.sin(
-                                                                                       theta4) * (np.cos(theta1) * np.sin(
-                                                                                       theta3) + np.cos(theta2) * np.cos(
-                                                                                       theta3) * np.sin(theta1)))) - np.sin(
-        theta1) * np.sin(theta2) * np.sin(theta6)) - np.cos(theta7) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(theta4) * (
-                    np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1))) - np.sin(theta5) * (
-                                                                          np.cos(theta4) * (
-                                                                              np.cos(theta1) * np.sin(theta3) + np.cos(
-                                                                          theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(
-                                                                      theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(
-                                                                      theta2) * np.sin(theta1) * np.sin(theta3))))) * (
-                      (37 * np.sin(theta2) * np.sin(theta6) * np.sin(theta7)) / 100 - (
-                          27 * np.cos(theta2) * np.cos(theta7) * np.sin(theta5)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta6) * np.sin(theta7)) / 100 - (
-                                  47 * np.cos(theta2) * np.cos(theta7) * np.sin(theta6)) / 100 - (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta7) * np.sin(theta5)) / 20 - (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.cos(theta7) * np.sin(theta4)) / 20 - (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta3) * np.sin(theta2) * np.sin(theta6) * np.sin(theta7)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta7) * np.sin(theta5)) / 100 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.cos(theta7) * np.sin(theta4)) / 100 - (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta3)) / 100 - (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2)) / 100 - (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta7)) / 20 + (
-                                  37 * np.cos(theta2) * np.cos(theta7) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(theta5) * np.sin(theta7)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta5) * np.sin(theta2) * np.sin(theta4) * np.sin(theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                                  47 * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta7)) / 100 + (
-                                  111 * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                                  111 * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4)) / 100 + (
-                                  27 * np.cos(theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(theta6) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta6) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 20 - (
-                                  47 * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  27 * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6) * np.sin(theta7)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(
-                              theta2)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta6) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta6) * np.sin(theta3) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta4) * np.sin(
-                              theta7)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4) * np.sin(
-                              theta5)) / 100 + (
-                                  111 * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(
-                              theta7)) / 100 + (
-                                  47 * np.cos(theta4) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(
-                              theta5)) / 100 + (
-                                  47 * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(
-                              theta4)) / 100 - (
-                                  37 * np.cos(theta3) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta4) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  111 * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta7)) / 100) + (np.sin(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(theta4) * (
-                    np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                                                                            np.cos(theta4) * (
-                                                                                np.cos(theta1) * np.cos(theta3) - np.cos(
-                                                                            theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(
-                                                                        theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(
-                                                                        theta2) * np.cos(theta3) * np.sin(theta1)))) + np.cos(
-        theta6) * np.sin(theta1) * np.sin(theta2)) * ((27 * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4)) / 20 - (
-                37 * np.cos(theta6) * np.sin(theta2)) / 100 - (27 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2)) / 20 - (
-                                                            27 * np.cos(theta2) * np.cos(theta5) * np.sin(theta6)) / 20 - (
-                                                            27 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.sin(
-                                                        theta2)) / 20 - (
-                                                            27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(
-                                                        theta6)) / 20 - (37 * np.cos(theta2) * np.sin(theta6)) / 100 + (
-                                                            27 * np.cos(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                                                        theta6)) / 20 - (
-                                                            37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(
-                                                        theta5) * np.sin(theta6)) / 100 - (
-                                                            37 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(
-                                                        theta6) * np.sin(theta2)) / 100 + (
-                                                            37 * np.cos(theta2) * np.cos(theta3) * np.sin(theta4) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta2) * np.cos(theta4) * np.sin(theta3) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta2) * np.cos(theta5) * np.sin(theta3) * np.sin(
-                                                        theta4) * np.sin(theta6)) / 100 + (
-                                                            111 * np.cos(theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100 + (
-                                                            111 * np.cos(theta3) * np.cos(theta5) * np.sin(theta2) * np.sin(
-                                                        theta4) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                                                        theta4) * np.sin(theta5)) / 100 + (
-                                                            111 * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(
-                                                        theta3) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                                                        theta3) * np.sin(theta5)) / 100 + (
-                                                            37 * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                                                        theta3) * np.sin(theta4)) / 100 - (
-                                                            111 * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100)
-    J12 = (np.sin(theta1) * (
-                111 * np.cos(theta2) + 47 * np.cos(theta2) * np.cos(theta6) + 135 * np.sin(theta2) * np.sin(theta3) + 135 * np.cos(
-            theta3) * np.sin(theta2) * np.sin(theta4) + 135 * np.cos(theta4) * np.sin(theta2) * np.sin(theta3) + 37 * np.cos(
-            theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(theta5) + 37 * np.cos(theta3) * np.cos(theta5) * np.sin(theta2) * np.sin(
-            theta4) + 37 * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) - 37 * np.sin(theta2) * np.sin(theta3) * np.sin(
-            theta4) * np.sin(theta5) - 47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta6) + 47 * np.cos(
-            theta3) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6) + 47 * np.cos(theta4) * np.sin(theta2) * np.sin(
-            theta3) * np.sin(theta5) * np.sin(theta6) + 47 * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-            theta6))) / 100
-    J13 = (27 * np.cos(theta2) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4)) / 20 - (
-                27 * np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) / 20 - (
-                      27 * np.cos(theta1) * np.cos(theta3) * np.sin(theta4)) / 20 - (
-                      27 * np.cos(theta1) * np.cos(theta4) * np.sin(theta3)) / 20 - (
-                      27 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta1)) / 20 - (
-                      37 * np.cos(theta1) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5)) / 100 - (
-                      37 * np.cos(theta1) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4)) / 100 - (
-                      37 * np.cos(theta1) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3)) / 100 - (
-                      27 * np.cos(theta1) * np.sin(theta3)) / 20 + (
-                      37 * np.cos(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                      37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta6)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta3) * np.sin(theta1) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta4) * np.sin(theta1) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta4) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta5) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta1) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta1) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta2) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100
-    J14 = (np.cos(theta7) * (np.cos(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(theta4) * (
-                    np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                                                     np.cos(theta4) * (
-                                                         np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(
-                                                     theta3)) - np.sin(theta4) * (
-                                                                 np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(
-                                                             theta3) * np.sin(theta1)))) - np.sin(theta1) * np.sin(theta2) * np.sin(
-        theta6)) + np.sin(theta7) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(theta4) * (
-                    np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1))) - np.sin(theta5) * (
-                                              np.cos(theta4) * (
-                                                  np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(
-                                              theta1)) + np.sin(theta4) * (
-                                                          np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(
-                                                      theta3))))) * (
-                      (27 * np.sin(theta5) * np.sin(theta7)) / 20 + (47 * np.sin(theta6) * np.sin(theta7)) / 100 - np.cos(theta7) * (
-                          (37 * np.cos(theta6)) / 100 + (27 * np.cos(theta5) * np.cos(theta6)) / 20)) - (np.sin(theta7) * (
-                np.cos(theta6) * (np.cos(theta5) * (
-                    np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(
-                theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                                           np.cos(theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(
-                                       theta3)) - np.sin(theta4) * (
-                                                       np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(
-                                                   theta1)))) - np.sin(theta1) * np.sin(theta2) * np.sin(theta6)) - np.cos(
-        theta7) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(theta4) * (
-                    np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1))) - np.sin(theta5) * (
-                               np.cos(theta4) * (
-                                   np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(
-                           theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))))) * (
-                      (27 * np.cos(theta7) * np.sin(theta5)) / 20 + (47 * np.cos(theta7) * np.sin(theta6)) / 100 + np.sin(theta7) * (
-                          (37 * np.cos(theta6)) / 100 + (27 * np.cos(theta5) * np.cos(theta6)) / 20)) - (np.sin(theta6) * (
-                np.cos(theta5) * (
-                    np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(
-                theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                            np.cos(theta4) * (np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(
-                        theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)))) + np.cos(
-        theta6) * np.sin(theta1) * np.sin(theta2)) * ((37 * np.sin(theta6)) / 100 + (27 * np.cos(theta5) * np.sin(theta6)) / 20)
-    J15 = (37 * np.cos(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                37 * np.cos(theta1) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4)) / 100 - (
-                      37 * np.cos(theta1) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3)) / 100 - (
-                      37 * np.cos(theta1) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5)) / 100 - (
-                      37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta6)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta3) * np.sin(theta1) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta4) * np.sin(theta1) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta4) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta5) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta1) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta1) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta2) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100
-    J16 = (47 * np.cos(theta1) * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.sin(theta5)) / 100 - (
-                47 * np.sin(theta1) * np.sin(theta2) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta3) * np.cos(theta5) * np.cos(theta6) * np.sin(theta4)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta3)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta6) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta1)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta6) * np.sin(theta1) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta4) * np.cos(theta6) * np.sin(theta1) * np.sin(theta3) * np.sin(theta5)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4)) / 100
-    J17 = 0
-    J21 = 0
-    J22 = (27 * np.cos(theta2) * np.sin(theta3)) / 20 - (111 * np.sin(theta2)) / 100 - (47 * np.cos(theta6) * np.sin(theta2)) / 100 + (
-                27 * np.cos(theta2) * np.cos(theta3) * np.sin(theta4)) / 20 + (
-                      27 * np.cos(theta2) * np.cos(theta4) * np.sin(theta3)) / 20 + (
-                      37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4)) / 100 + (
-                      37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3)) / 100 - (
-                      37 * np.cos(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta2) * np.cos(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta2) * np.cos(theta4) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta2) * np.cos(theta5) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 100
-    J23 = (np.sin(theta2) * (
-                37 * np.cos(theta3 + theta4 + theta5) - (47 * np.cos(theta3 + theta4 + theta5 + theta6)) / 2 + 135 * np.cos(
-            theta3 + theta4) + 135 * np.cos(theta3) + (47 * np.cos(theta3 + theta4 + theta5 - theta6)) / 2)) / 100;
-    J24 = (np.sin(theta2) * (
-                135 * np.cos(theta3 + theta4) - 37 * np.sin(theta3 + theta4) * np.sin(theta5) + 37 * np.cos(theta3 + theta4) * np.cos(
-            theta5) + 47 * np.cos(theta3 + theta4) * np.sin(theta5) * np.sin(theta6) + 47 * np.sin(theta3 + theta4) * np.cos(
-            theta5) * np.sin(theta6))) / 100;
-    J25 = (np.sin(theta2) * (37 * np.cos(theta3 + theta4 + theta5) + 47 * np.sin(theta3 + theta4 + theta5) * np.sin(theta6))) / 100;
-    J26 = (47 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2)) / 100 - (
-                      47 * np.cos(theta2) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                      47 * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4)) / 100;
-    J27 = 0;
-    J31 = - (np.sin(theta7) * (np.cos(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                                       np.cos(theta3) * np.cos(theta4) * np.sin(theta1) - np.sin(theta1) * np.sin(
-                                                   theta3) * np.sin(theta4) + np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                   theta3) * np.sin(theta4) + np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                   theta4) * np.sin(theta3))) + np.cos(theta1) * np.sin(theta2) * np.sin(
-        theta6)) + np.cos(theta7) * (np.sin(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) - np.cos(theta5) * (
-                                              np.cos(theta3) * np.cos(theta4) * np.sin(theta1) - np.sin(theta1) * np.sin(theta3) * np.sin(
-                                          theta4) + np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.sin(theta4) + np.cos(
-                                          theta1) * np.cos(theta2) * np.cos(theta4) * np.sin(theta3)))) * (
-                      (37 * np.sin(theta2) * np.sin(theta6) * np.sin(theta7)) / 100 - (
-                          27 * np.cos(theta2) * np.cos(theta7) * np.sin(theta5)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta6) * np.sin(theta7)) / 100 - (
-                                  47 * np.cos(theta2) * np.cos(theta7) * np.sin(theta6)) / 100 - (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta7) * np.sin(theta5)) / 20 - (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.cos(theta7) * np.sin(theta4)) / 20 - (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta3) * np.sin(theta2) * np.sin(theta6) * np.sin(theta7)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta7) * np.sin(theta5)) / 100 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.cos(theta7) * np.sin(theta4)) / 100 - (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta3)) / 100 - (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2)) / 100 - (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta7)) / 20 + (
-                                  37 * np.cos(theta2) * np.cos(theta7) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(theta5) * np.sin(theta7)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta5) * np.sin(theta2) * np.sin(theta4) * np.sin(theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                                  47 * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta7)) / 100 + (
-                                  111 * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                                  111 * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4)) / 100 + (
-                                  27 * np.cos(theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(theta6) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta6) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 20 - (
-                                  47 * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  27 * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6) * np.sin(theta7)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(
-                              theta2)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta6) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta6) * np.sin(theta3) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta4) * np.sin(
-                              theta7)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4) * np.sin(
-                              theta5)) / 100 + (
-                                  111 * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(
-                              theta7)) / 100 + (
-                                  47 * np.cos(theta4) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(
-                              theta5)) / 100 + (
-                                  47 * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(
-                              theta4)) / 100 - (
-                                  37 * np.cos(theta3) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta4) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6) * np.sin(
-                              theta7)) / 100 - (
-                                  111 * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta7)) / 100) - (np.cos(theta7) * (np.cos(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                                                                           np.cos(theta3) * np.cos(
-                                                                                       theta4) * np.sin(theta1) - np.sin(
-                                                                                       theta1) * np.sin(theta3) * np.sin(
-                                                                                       theta4) + np.cos(theta1) * np.cos(
-                                                                                       theta2) * np.cos(theta3) * np.sin(
-                                                                                       theta4) + np.cos(theta1) * np.cos(
-                                                                                       theta2) * np.cos(theta4) * np.sin(
-                                                                                       theta3))) + np.cos(theta1) * np.sin(
-        theta2) * np.sin(theta6)) - np.sin(theta7) * (np.sin(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) - np.cos(theta5) * (
-                                                            np.cos(theta3) * np.cos(theta4) * np.sin(theta1) - np.sin(theta1) * np.sin(
-                                                        theta3) * np.sin(theta4) + np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                        theta3) * np.sin(theta4) + np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                        theta4) * np.sin(theta3)))) * (
-                      (27 * np.cos(theta2) * np.sin(theta5) * np.sin(theta7)) / 20 + (
-                          47 * np.cos(theta2) * np.sin(theta6) * np.sin(theta7)) / 100 + (
-                                  37 * np.cos(theta7) * np.sin(theta2) * np.sin(theta6)) / 100 - (
-                                  37 * np.cos(theta2) * np.cos(theta6) * np.cos(theta7)) / 100 - (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.sin(theta5) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta5) * np.sin(theta4) * np.sin(theta7)) / 20 + (
-                                  27 * np.cos(theta3) * np.cos(theta7) * np.sin(theta2) * np.sin(theta6)) / 20 - (
-                                  27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7)) / 20 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4) * np.sin(theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3) * np.sin(theta7)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta7)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta5)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4)) / 100 + (
-                                  47 * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3)) / 100 + (
-                                  27 * np.cos(theta3) * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta6)) / 20 + (
-                                  27 * np.cos(theta2) * np.cos(theta6) * np.cos(theta7) * np.sin(theta4) * np.sin(theta5)) / 20 - (
-                                  37 * np.cos(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  111 * np.cos(theta3) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  111 * np.cos(theta4) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(theta7)) / 100 - (
-                                  111 * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta7)) / 100 - (
-                                  47 * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                                  27 * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 20 - (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta6) * np.cos(theta7) * np.sin(theta4) * np.sin(
-                              theta5)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta4) * np.cos(theta6) * np.cos(theta7) * np.sin(theta3) * np.sin(
-                              theta5)) / 100 + (
-                                  37 * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta3) * np.sin(
-                              theta4)) / 100 + (
-                                  47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                              theta7)) / 100 + (
-                                  37 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta6)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta5)) / 100 + (
-                                  111 * np.cos(theta3) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta4)) / 100 + (
-                                  111 * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(
-                              theta3)) / 100 - (
-                                  47 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta3) * np.cos(theta7) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                              theta6)) / 100 - (
-                                  47 * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta4) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta5) * np.sin(
-                              theta6)) / 100 - (
-                                  47 * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta7)) / 100 - (
-                                  37 * np.cos(theta5) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta6)) / 100 - (
-                                  111 * np.cos(theta6) * np.cos(theta7) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                              theta5)) / 100) - (np.sin(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                                                            np.cos(theta3) * np.cos(theta4) * np.sin(
-                                                                        theta1) - np.sin(theta1) * np.sin(theta3) * np.sin(
-                                                                        theta4) + np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                                        theta3) * np.sin(theta4) + np.cos(theta1) * np.cos(
-                                                                        theta2) * np.cos(theta4) * np.sin(theta3))) - np.cos(
-        theta1) * np.cos(theta6) * np.sin(theta2)) * ((27 * np.cos(theta6) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4)) / 20 - (
-                37 * np.cos(theta6) * np.sin(theta2)) / 100 - (27 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2)) / 20 - (
-                                                            27 * np.cos(theta2) * np.cos(theta5) * np.sin(theta6)) / 20 - (
-                                                            27 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.sin(
-                                                        theta2)) / 20 - (
-                                                            27 * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(
-                                                        theta6)) / 20 - (37 * np.cos(theta2) * np.sin(theta6)) / 100 + (
-                                                            27 * np.cos(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(
-                                                        theta6)) / 20 - (
-                                                            37 * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(
-                                                        theta5) * np.sin(theta6)) / 100 - (
-                                                            37 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(
-                                                        theta6) * np.sin(theta2)) / 100 + (
-                                                            37 * np.cos(theta2) * np.cos(theta3) * np.sin(theta4) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta2) * np.cos(theta4) * np.sin(theta3) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta2) * np.cos(theta5) * np.sin(theta3) * np.sin(
-                                                        theta4) * np.sin(theta6)) / 100 + (
-                                                            111 * np.cos(theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100 + (
-                                                            111 * np.cos(theta3) * np.cos(theta5) * np.sin(theta2) * np.sin(
-                                                        theta4) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta3) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                                                        theta4) * np.sin(theta5)) / 100 + (
-                                                            111 * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(
-                                                        theta3) * np.sin(theta6)) / 100 + (
-                                                            37 * np.cos(theta4) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                                                        theta3) * np.sin(theta5)) / 100 + (
-                                                            37 * np.cos(theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(
-                                                        theta3) * np.sin(theta4)) / 100 - (
-                                                            111 * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-                                                        theta5) * np.sin(theta6)) / 100);
-    J32 = (np.cos(theta1) * (
-                111 * np.cos(theta2) + 47 * np.cos(theta2) * np.cos(theta6) + 135 * np.sin(theta2) * np.sin(theta3) + 135 * np.cos(
-            theta3) * np.sin(theta2) * np.sin(theta4) + 135 * np.cos(theta4) * np.sin(theta2) * np.sin(theta3) + 37 * np.cos(
-            theta3) * np.cos(theta4) * np.sin(theta2) * np.sin(theta5) + 37 * np.cos(theta3) * np.cos(theta5) * np.sin(theta2) * np.sin(
-            theta4) + 37 * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) - 37 * np.sin(theta2) * np.sin(theta3) * np.sin(
-            theta4) * np.sin(theta5) - 47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta2) * np.sin(theta6) + 47 * np.cos(
-            theta3) * np.sin(theta2) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6) + 47 * np.cos(theta4) * np.sin(theta2) * np.sin(
-            theta3) * np.sin(theta5) * np.sin(theta6) + 47 * np.cos(theta5) * np.sin(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(
-            theta6))) / 100;
-    J33 = (27 * np.sin(theta1) * np.sin(theta3)) / 20 + (27 * np.cos(theta3) * np.sin(theta1) * np.sin(theta4)) / 20 + (
-                27 * np.cos(theta4) * np.sin(theta1) * np.sin(theta3)) / 20 - (
-                      27 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) / 20 - (
-                      27 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4)) / 20 + (
-                      27 * np.cos(theta1) * np.cos(theta2) * np.sin(theta3) * np.sin(theta4)) / 20 + (
-                      37 * np.cos(theta3) * np.cos(theta4) * np.sin(theta1) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta3) * np.cos(theta5) * np.sin(theta1) * np.sin(theta4)) / 100 + (
-                      37 * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3)) / 100 - (
-                      37 * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5)) / 100 + (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta4) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta5) * np.sin(theta3) * np.sin(theta4)) / 100 - (
-                      47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta3) * np.sin(theta1) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta4) * np.sin(theta1) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100;
-    J34 = (np.sin(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                      np.cos(theta4) * (
-                                          np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3)) - np.sin(
-                                  theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(
-                                  theta3)))) - np.cos(theta1) * np.cos(theta6) * np.sin(theta2)) * (
-                      (37 * np.sin(theta6)) / 100 + (27 * np.cos(theta5) * np.sin(theta6)) / 20) + (np.sin(theta7) * (
-                np.cos(theta6) * (np.cos(theta5) * (
-                    np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(
-                theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                           np.cos(theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(
-                                       theta3)) - np.sin(theta4) * (
-                                                       np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                   theta3)))) + np.cos(theta1) * np.sin(theta2) * np.sin(theta6)) - np.cos(
-        theta7) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3)) - np.sin(theta4) * (
-                    np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3))) - np.sin(theta5) * (
-                               np.cos(theta4) * (
-                                   np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(
-                           theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))))) * (
-                      (27 * np.cos(theta7) * np.sin(theta5)) / 20 + (47 * np.cos(theta7) * np.sin(theta6)) / 100 + np.sin(theta7) * (
-                          (37 * np.cos(theta6)) / 100 + (27 * np.cos(theta5) * np.cos(theta6)) / 20)) - (np.cos(theta7) * (
-                np.cos(theta6) * (np.cos(theta5) * (
-                    np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(
-                theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                           np.cos(theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(
-                                       theta3)) - np.sin(theta4) * (
-                                                       np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(
-                                                   theta3)))) + np.cos(theta1) * np.sin(theta2) * np.sin(theta6)) + np.sin(
-        theta7) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3)) - np.sin(theta4) * (
-                    np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3))) - np.sin(theta5) * (
-                               np.cos(theta4) * (
-                                   np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(
-                           theta4) * (np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))))) * (
-                      (27 * np.sin(theta5) * np.sin(theta7)) / 20 + (47 * np.sin(theta6) * np.sin(theta7)) / 100 - np.cos(theta7) * (
-                          (37 * np.cos(theta6)) / 100 + (27 * np.cos(theta5) * np.cos(theta6)) / 20));
-    J35 = (37 * np.cos(theta3) * np.cos(theta4) * np.sin(theta1) * np.sin(theta5)) / 100 + (
-                37 * np.cos(theta3) * np.cos(theta5) * np.sin(theta1) * np.sin(theta4)) / 100 + (
-                      37 * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3)) / 100 - (
-                      37 * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5)) / 100 + (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta4) * np.sin(theta3) * np.sin(theta5)) / 100 + (
-                      37 * np.cos(theta1) * np.cos(theta2) * np.cos(theta5) * np.sin(theta3) * np.sin(theta4)) / 100 - (
-                      47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta3) * np.sin(theta1) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta4) * np.sin(theta1) * np.sin(theta3) * np.sin(theta5) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta5) * np.sin(theta4) * np.sin(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5) * np.sin(theta6)) / 100
-    J36 = (47 * np.cos(theta6) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                47 * np.cos(theta3) * np.cos(theta4) * np.cos(theta6) * np.sin(theta1) * np.sin(theta5)) / 100 - (
-                      47 * np.cos(theta3) * np.cos(theta5) * np.cos(theta6) * np.sin(theta1) * np.sin(theta4)) / 100 - (
-                      47 * np.cos(theta4) * np.cos(theta5) * np.cos(theta6) * np.sin(theta1) * np.sin(theta3)) / 100 - (
-                      47 * np.cos(theta1) * np.sin(theta2) * np.sin(theta6)) / 100 + (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.cos(theta6)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta6) * np.sin(theta4) * np.sin(theta5)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta4) * np.cos(theta6) * np.sin(theta3) * np.sin(theta5)) / 100 - (
-                      47 * np.cos(theta1) * np.cos(theta2) * np.cos(theta5) * np.cos(theta6) * np.sin(theta3) * np.sin(theta4)) / 100
-    J37 = 0
-    J41 = 0
-    J42 = np.cos(theta1)
-    J43 = np.sin(theta1) * np.sin(theta2)
-    J44 = np.sin(theta1) * np.sin(theta2)
-    J45 = np.sin(theta1) * np.sin(theta2)
-    J46 = np.cos(theta1) * np.cos(theta3) * np.cos(theta4) * np.cos(theta5) - np.cos(theta1) * np.cos(theta3) * np.sin(theta4) * np.sin(
-        theta5) - np.cos(theta1) * np.cos(theta4) * np.sin(theta3) * np.sin(theta5) - np.cos(theta1) * np.cos(theta5) * np.sin(theta3) * np.sin(
-        theta4) - np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta1) * np.sin(theta5) - np.cos(theta2) * np.cos(theta3) * np.cos(
-        theta5) * np.sin(theta1) * np.sin(theta4) - np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta1) * np.sin(theta3) + np.cos(
-        theta2) * np.sin(theta1) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)
-    J47 = np.sin(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(theta1)) + np.sin(theta4) * (
-                    np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3))) + np.sin(theta5) * (
-                                     np.cos(theta4) * (
-                                         np.cos(theta1) * np.cos(theta3) - np.cos(theta2) * np.sin(theta1) * np.sin(theta3)) - np.sin(
-                                 theta4) * (np.cos(theta1) * np.sin(theta3) + np.cos(theta2) * np.cos(theta3) * np.sin(
-                                 theta1)))) + np.cos(theta6) * np.sin(theta1) * np.sin(theta2)
-    J51 = (np.cos(theta2) * np.cos(theta6) - np.cos(theta3 + theta4 + theta5) * np.sin(theta2) * np.sin(theta6)) ** 2 + (
-                np.cos(theta2) * np.cos(theta7) * np.sin(theta6) - np.sin(theta3 + theta4 + theta5) * np.sin(theta2) * np.sin(
-            theta7) + np.cos(theta3 + theta4 + theta5) * np.cos(theta6) * np.cos(theta7) * np.sin(theta2)) ** 2 + (
-                      np.cos(theta2) * np.sin(theta6) * np.sin(theta7) + np.sin(theta3 + theta4 + theta5) * np.cos(theta7) * np.sin(
-                  theta2) + np.cos(theta3 + theta4 + theta5) * np.cos(theta6) * np.sin(theta2) * np.sin(theta7)) ** 2
-    J52 = 0
-    J53 = np.cos(theta2)
-    J54 = np.cos(theta2)
-    J55 = np.cos(theta2)
-    J56 = np.cos(theta3 - theta2 + theta4 + theta5) / 2 - np.cos(theta2 + theta3 + theta4 + theta5) / 2
-    J57 = np.cos(theta2) * np.cos(theta6) - np.cos(theta3 + theta4 + theta5) * np.sin(theta2) * np.sin(theta6)
-    J61 = 0
-    J62 = -np.sin(theta1)
-    J63 = np.cos(theta1) * np.sin(theta2)
-    J64 = np.cos(theta1) * np.sin(theta2)
-    J65 = np.cos(theta1) * np.sin(theta2)
-    J66 = np.cos(theta3) * np.sin(theta1) * np.sin(theta4) * np.sin(theta5) - np.cos(theta3) * np.cos(theta4) * np.cos(theta5) * np.sin(
-        theta1) + np.cos(theta4) * np.sin(theta1) * np.sin(theta3) * np.sin(theta5) + np.cos(theta5) * np.sin(theta1) * np.sin(theta3) * np.sin(
-        theta4) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3) * np.cos(theta4) * np.sin(theta5) - np.cos(theta1) * np.cos(theta2) * np.cos(
-        theta3) * np.cos(theta5) * np.sin(theta4) - np.cos(theta1) * np.cos(theta2) * np.cos(theta4) * np.cos(theta5) * np.sin(theta3) + np.cos(
-        theta1) * np.cos(theta2) * np.sin(theta3) * np.sin(theta4) * np.sin(theta5)
-    J67 = np.cos(theta1) * np.cos(theta6) * np.sin(theta2) - np.sin(theta6) * (np.cos(theta5) * (
-                np.cos(theta4) * (np.sin(theta1) * np.sin(theta3) - np.cos(theta1) * np.cos(theta2) * np.cos(theta3)) + np.sin(theta4) * (
-                    np.cos(theta3) * np.sin(theta1) + np.cos(theta1) * np.cos(theta2) * np.sin(theta3))) + np.sin(theta5) * (
-                                                                               np.cos(theta4) * (
-                                                                                   np.cos(theta3) * np.sin(theta1) + np.cos(
-                                                                               theta1) * np.cos(theta2) * np.sin(
-                                                                               theta3)) - np.sin(theta4) * (
-                                                                                           np.sin(theta1) * np.sin(
-                                                                                       theta3) - np.cos(theta1) * np.cos(
-                                                                                       theta2) * np.cos(theta3))))
+    J11 =(np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) - np.sin(theta1)*np.sin(theta2)*np.sin(theta6)) + np.sin(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1))) - np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)))))*((7*np.cos(theta2)*np.sin(theta5)*np.sin(theta7))/5 + (2*np.cos(theta2)*np.sin(theta6)*np.sin(theta7))/5 + (37*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/100 - (37*np.cos(theta2)*np.cos(theta6)*np.cos(theta7))/100 - (7*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/5 + (7*np.cos(theta2)*np.cos(theta4)*np.sin(theta5)*np.sin(theta7))/5 + (7*np.cos(theta2)*np.cos(theta5)*np.sin(theta4)*np.sin(theta7))/5 + (7*np.cos(theta3)*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/5 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3)*np.sin(theta7))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta7))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta5))/5 + (2*np.cos(theta3)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4))/5 + (2*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3))/5 + (7*np.cos(theta3)*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/5 + (7*np.cos(theta2)*np.cos(theta6)*np.cos(theta7)*np.sin(theta4)*np.sin(theta5))/5 - (37*np.cos(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100 - (101*np.cos(theta3)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100 - (101*np.cos(theta4)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta7))/100 - (101*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta7))/100 - (2*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/5 - (7*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta6)*np.cos(theta7)*np.sin(theta4)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta6)*np.cos(theta7)*np.sin(theta3)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta3)*np.sin(theta4))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta7))/5 + (37*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta5))/100 + (101*np.cos(theta3)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4))/100 + (101*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3))/100 - (2*np.cos(theta3)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/5 - (37*np.cos(theta3)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/100 - (2*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta7))/5 - (37*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/100 - (2*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta7))/5 - (37*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/100 - (101*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100) + (np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) - np.sin(theta1)*np.sin(theta2)*np.sin(theta6)) - np.cos(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1))) - np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)))))*((37*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/100 - (7*np.cos(theta2)*np.cos(theta7)*np.sin(theta5))/5 - (37*np.cos(theta2)*np.cos(theta6)*np.sin(theta7))/100 - (2*np.cos(theta2)*np.cos(theta7)*np.sin(theta6))/5 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta7)*np.sin(theta5))/5 - (7*np.cos(theta2)*np.cos(theta5)*np.cos(theta7)*np.sin(theta4))/5 - (7*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/5 + (7*np.cos(theta3)*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta7)*np.sin(theta5))/100 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.cos(theta7)*np.sin(theta4))/100 - (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta3))/100 - (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2))/100 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/5 + (37*np.cos(theta2)*np.cos(theta7)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta5)*np.sin(theta7))/5 + (2*np.cos(theta3)*np.cos(theta5)*np.sin(theta2)*np.sin(theta4)*np.sin(theta7))/5 + (101*np.cos(theta3)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/100 + (2*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta7))/5 + (101*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/100 + (101*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/100 + (7*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/5 + (7*np.cos(theta2)*np.cos(theta6)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/5 - (2*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/5 - (7*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6)*np.sin(theta7))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/100 - (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta6)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta6)*np.sin(theta3)*np.sin(theta5)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.sin(theta3)*np.sin(theta4)*np.sin(theta7))/100 + (37*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta5)*np.sin(theta7))/100 + (101*np.cos(theta3)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta7))/100 + (2*np.cos(theta3)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/5 + (101*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta7))/100 + (2*np.cos(theta4)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/5 + (2*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/5 - (37*np.cos(theta3)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6)*np.sin(theta7))/100 - (37*np.cos(theta4)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6)*np.sin(theta7))/100 - (37*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6)*np.sin(theta7))/100 - (101*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100) + (np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) + np.cos(theta6)*np.sin(theta1)*np.sin(theta2))*((7*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/5 - (37*np.cos(theta6)*np.sin(theta2))/100 - (7*np.cos(theta3)*np.cos(theta6)*np.sin(theta2))/5 - (7*np.cos(theta2)*np.cos(theta5)*np.sin(theta6))/5 - (7*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.sin(theta2))/5 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/5 - (37*np.cos(theta2)*np.sin(theta6))/100 + (7*np.cos(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/100 - (37*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta5)*np.sin(theta6))/100 + (101*np.cos(theta3)*np.cos(theta5)*np.sin(theta2)*np.sin(theta4)*np.sin(theta6))/100 + (37*np.cos(theta3)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/100 + (101*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta6))/100 + (37*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/100 + (37*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/100 - (101*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/100)
+    J12 =(np.sin(theta1)*(101*np.cos(theta2) + 40*np.cos(theta2)*np.cos(theta6) + 140*np.sin(theta2)*np.sin(theta3) + 140*np.cos(theta3)*np.sin(theta2)*np.sin(theta4) + 140*np.cos(theta4)*np.sin(theta2)*np.sin(theta3) + 37*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta5) + 37*np.cos(theta3)*np.cos(theta5)*np.sin(theta2)*np.sin(theta4) + 37*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta3) - 37*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5) - 40*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta6) + 40*np.cos(theta3)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6) + 40*np.cos(theta4)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6) + 40*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6)))/100
+    J13 =(7*np.cos(theta2)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4))/5 - (7*np.cos(theta2)*np.cos(theta3)*np.sin(theta1))/5 - (7*np.cos(theta1)*np.cos(theta3)*np.sin(theta4))/5 - (7*np.cos(theta1)*np.cos(theta4)*np.sin(theta3))/5 - (7*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta1))/5 - (37*np.cos(theta1)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5))/100 - (37*np.cos(theta1)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4))/100 - (37*np.cos(theta1)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3))/100 - (7*np.cos(theta1)*np.sin(theta3))/5 + (37*np.cos(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1))/100 + (2*np.cos(theta1)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(theta4)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.sin(theta1)*np.sin(theta3)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4))/100 - (2*np.cos(theta1)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta1)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta1)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5 - (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta1)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta1)*np.sin(theta4)*np.sin(theta6))/5 - (2*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta6))/5 + (2*np.cos(theta2)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5
+    J14 =- (np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) - np.sin(theta1)*np.sin(theta2)*np.sin(theta6)) + np.sin(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1))) - np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)))))*((37*np.cos(theta6)*np.cos(theta7))/100 - (7*np.sin(theta5)*np.sin(theta7))/5 - (2*np.sin(theta6)*np.sin(theta7))/5 + (7*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/5) - (np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) - np.sin(theta1)*np.sin(theta2)*np.sin(theta6)) - np.cos(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1))) - np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)))))*((7*np.cos(theta7)*np.sin(theta5))/5 + (37*np.cos(theta6)*np.sin(theta7))/100 + (2*np.cos(theta7)*np.sin(theta6))/5 + (7*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/5) - (np.sin(theta6)*(np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) + np.cos(theta6)*np.sin(theta1)*np.sin(theta2))*(140*np.cos(theta5) + 37))/100
+    J15 =(37*np.cos(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 - (37*np.cos(theta1)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4))/100 - (37*np.cos(theta1)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3))/100 - (37*np.cos(theta1)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5))/100 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1))/100 + (2*np.cos(theta1)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.sin(theta1)*np.sin(theta4)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.sin(theta1)*np.sin(theta3)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4))/100 - (2*np.cos(theta1)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta1)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta1)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5 - (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta1)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta1)*np.sin(theta4)*np.sin(theta6))/5 - (2*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta6))/5 + (2*np.cos(theta2)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5
+    J16 =(2*np.cos(theta1)*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.sin(theta5))/5 - (2*np.sin(theta1)*np.sin(theta2)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta3)*np.cos(theta5)*np.cos(theta6)*np.sin(theta4))/5 + (2*np.cos(theta1)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta3))/5 - (2*np.cos(theta1)*np.cos(theta6)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/5 + (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta1))/5 - (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta6)*np.sin(theta1)*np.sin(theta4)*np.sin(theta5))/5 - (2*np.cos(theta2)*np.cos(theta4)*np.cos(theta6)*np.sin(theta1)*np.sin(theta3)*np.sin(theta5))/5 - (2*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4))/5
+    J17 =0
+    J21 =(np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta3)*np.cos(theta4)*np.sin(theta1) - np.sin(theta1)*np.sin(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) + np.cos(theta7)*(np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) - np.cos(theta5)*(np.cos(theta3)*np.cos(theta4)*np.sin(theta1) - np.sin(theta1)*np.sin(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3))))*((37*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/100 - (7*np.cos(theta2)*np.cos(theta7)*np.sin(theta5))/5 - (37*np.cos(theta2)*np.cos(theta6)*np.sin(theta7))/100 - (2*np.cos(theta2)*np.cos(theta7)*np.sin(theta6))/5 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta7)*np.sin(theta5))/5 - (7*np.cos(theta2)*np.cos(theta5)*np.cos(theta7)*np.sin(theta4))/5 - (7*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/5 + (7*np.cos(theta3)*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta7)*np.sin(theta5))/100 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.cos(theta7)*np.sin(theta4))/100 - (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta3))/100 - (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2))/100 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/5 + (37*np.cos(theta2)*np.cos(theta7)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta5)*np.sin(theta7))/5 + (2*np.cos(theta3)*np.cos(theta5)*np.sin(theta2)*np.sin(theta4)*np.sin(theta7))/5 + (101*np.cos(theta3)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/100 + (2*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta7))/5 + (101*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/100 + (101*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/100 + (7*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/5 + (7*np.cos(theta2)*np.cos(theta6)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/5 - (2*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/5 - (7*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6)*np.sin(theta7))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta7))/100 - (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta6)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta6)*np.sin(theta3)*np.sin(theta5)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.sin(theta3)*np.sin(theta4)*np.sin(theta7))/100 + (37*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta6)*np.sin(theta7))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta5)*np.sin(theta7))/100 + (101*np.cos(theta3)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta7))/100 + (2*np.cos(theta3)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/5 + (101*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta7))/100 + (2*np.cos(theta4)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/5 + (2*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/5 - (37*np.cos(theta3)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6)*np.sin(theta7))/100 - (37*np.cos(theta4)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6)*np.sin(theta7))/100 - (37*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6)*np.sin(theta7))/100 - (101*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100) + (np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta3)*np.cos(theta4)*np.sin(theta1) - np.sin(theta1)*np.sin(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) - np.sin(theta7)*(np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) - np.cos(theta5)*(np.cos(theta3)*np.cos(theta4)*np.sin(theta1) - np.sin(theta1)*np.sin(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3))))*((7*np.cos(theta2)*np.sin(theta5)*np.sin(theta7))/5 + (2*np.cos(theta2)*np.sin(theta6)*np.sin(theta7))/5 + (37*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/100 - (37*np.cos(theta2)*np.cos(theta6)*np.cos(theta7))/100 - (7*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/5 + (7*np.cos(theta2)*np.cos(theta4)*np.sin(theta5)*np.sin(theta7))/5 + (7*np.cos(theta2)*np.cos(theta5)*np.sin(theta4)*np.sin(theta7))/5 + (7*np.cos(theta3)*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/5 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4)*np.sin(theta7))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3)*np.sin(theta7))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta7))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta5))/5 + (2*np.cos(theta3)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4))/5 + (2*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3))/5 + (7*np.cos(theta3)*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/5 + (7*np.cos(theta2)*np.cos(theta6)*np.cos(theta7)*np.sin(theta4)*np.sin(theta5))/5 - (37*np.cos(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100 - (101*np.cos(theta3)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/100 - (101*np.cos(theta4)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta7))/100 - (101*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta7))/100 - (2*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/5 - (7*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta6)*np.cos(theta7)*np.sin(theta4)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta6)*np.cos(theta7)*np.sin(theta3)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta3)*np.sin(theta4))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta7))/5 + (37*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta6))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta5))/100 + (101*np.cos(theta3)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4))/100 + (101*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3))/100 - (2*np.cos(theta3)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta7))/5 - (37*np.cos(theta3)*np.cos(theta7)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/100 - (2*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta7))/5 - (37*np.cos(theta4)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/100 - (2*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta7))/5 - (37*np.cos(theta5)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/100 - (101*np.cos(theta6)*np.cos(theta7)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100) + (np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta3)*np.cos(theta4)*np.sin(theta1) - np.sin(theta1)*np.sin(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3))) - np.cos(theta1)*np.cos(theta6)*np.sin(theta2))*((7*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/5 - (37*np.cos(theta6)*np.sin(theta2))/100 - (7*np.cos(theta3)*np.cos(theta6)*np.sin(theta2))/5 - (7*np.cos(theta2)*np.cos(theta5)*np.sin(theta6))/5 - (7*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.sin(theta2))/5 - (7*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/5 - (37*np.cos(theta2)*np.sin(theta6))/100 + (7*np.cos(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 - (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/100 - (37*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/100 + (37*np.cos(theta2)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/100 + (101*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta5)*np.sin(theta6))/100 + (101*np.cos(theta3)*np.cos(theta5)*np.sin(theta2)*np.sin(theta4)*np.sin(theta6))/100 + (37*np.cos(theta3)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/100 + (101*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta6))/100 + (37*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/100 + (37*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/100 - (101*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/100)
+    J22 =-(np.cos(theta1)*(101*np.cos(theta2) + 40*np.cos(theta2)*np.cos(theta6) + 140*np.sin(theta2)*np.sin(theta3) + 140*np.cos(theta3)*np.sin(theta2)*np.sin(theta4) + 140*np.cos(theta4)*np.sin(theta2)*np.sin(theta3) + 37*np.cos(theta3)*np.cos(theta4)*np.sin(theta2)*np.sin(theta5) + 37*np.cos(theta3)*np.cos(theta5)*np.sin(theta2)*np.sin(theta4) + 37*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta3) - 37*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5) - 40*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta2)*np.sin(theta6) + 40*np.cos(theta3)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6) + 40*np.cos(theta4)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6) + 40*np.cos(theta5)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6)))/100
+    J23 =(7*np.cos(theta1)*np.cos(theta2)*np.cos(theta3))/5 - (7*np.cos(theta3)*np.sin(theta1)*np.sin(theta4))/5 - (7*np.cos(theta4)*np.sin(theta1)*np.sin(theta3))/5 - (7*np.sin(theta1)*np.sin(theta3))/5 + (7*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4))/5 - (7*np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(theta4))/5 - (37*np.cos(theta3)*np.cos(theta4)*np.sin(theta1)*np.sin(theta5))/100 - (37*np.cos(theta3)*np.cos(theta5)*np.sin(theta1)*np.sin(theta4))/100 - (37*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3))/100 + (37*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 + (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5))/100 - (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5))/100 - (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5))/100 - (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta6))/5 - (2*np.cos(theta3)*np.sin(theta1)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta4)*np.sin(theta1)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3)*np.sin(theta6))/5 - (2*np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5
+    J24 =- (np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) - np.cos(theta1)*np.cos(theta6)*np.sin(theta2))*((37*np.sin(theta6))/100 + (7*np.cos(theta5)*np.sin(theta6))/5) - (np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) + np.sin(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)))))*((17*np.cos(theta6)*np.cos(theta7))/100 - (7*np.sin(theta5)*np.sin(theta7))/5 - (2*np.sin(theta6)*np.sin(theta7))/5 + np.cos(theta7)*(np.cos(theta6)/5 + (7*np.cos(theta5)*np.cos(theta6))/5)) - (np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) - np.cos(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)))))*((7*np.cos(theta7)*np.sin(theta5))/5 + (17*np.cos(theta6)*np.sin(theta7))/100 + (2*np.cos(theta7)*np.sin(theta6))/5 + np.sin(theta7)*(np.cos(theta6)/5 + (7*np.cos(theta5)*np.cos(theta6))/5))
+    J25 =(37*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 - (37*np.cos(theta3)*np.cos(theta5)*np.sin(theta1)*np.sin(theta4))/100 - (37*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3))/100 - (37*np.cos(theta3)*np.cos(theta4)*np.sin(theta1)*np.sin(theta5))/100 + (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5))/100 - (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5))/100 - (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5))/100 - (37*np.cos(theta1)*np.cos(theta2)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4))/100 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta6))/5 - (2*np.cos(theta3)*np.sin(theta1)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta4)*np.sin(theta1)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/5 - (2*np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4)*np.sin(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3)*np.sin(theta6))/5 - (2*np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5
+    J26 =(2*np.cos(theta1)*np.sin(theta2)*np.sin(theta6))/5 + (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta6)*np.sin(theta1)*np.sin(theta5))/5 + (2*np.cos(theta3)*np.cos(theta5)*np.cos(theta6)*np.sin(theta1)*np.sin(theta4))/5 + (2*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta1)*np.sin(theta3))/5 - (2*np.cos(theta6)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/5 - (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta6)*np.sin(theta4)*np.sin(theta5))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.cos(theta6)*np.sin(theta3)*np.sin(theta5))/5 + (2*np.cos(theta1)*np.cos(theta2)*np.cos(theta5)*np.cos(theta6)*np.sin(theta3)*np.sin(theta4))/5
+    J27 =0
+    J31 =0
+    J32 =(7*np.cos(theta2)*np.sin(theta3))/5 - (101*np.sin(theta2))/100 - (2*np.cos(theta6)*np.sin(theta2))/5 + (7*np.cos(theta2)*np.cos(theta3)*np.sin(theta4))/5 + (7*np.cos(theta2)*np.cos(theta4)*np.sin(theta3))/5 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5))/100 + (37*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4))/100 + (37*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3))/100 - (37*np.cos(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5))/100 - (2*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta6))/5 + (2*np.cos(theta2)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5)*np.sin(theta6))/5 + (2*np.cos(theta2)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5)*np.sin(theta6))/5 + (2*np.cos(theta2)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4)*np.sin(theta6))/5
+    J33 =(np.sin(theta2)*(37*np.cos(theta3 + theta4 + theta5) - 20*np.cos(theta3 + theta4 + theta5 + theta6) + 140*np.cos(theta3 + theta4) + 140*np.cos(theta3) + 20*np.cos(theta3 + theta4 + theta5 - theta6)))/100
+    J34 =(np.sin(theta2)*(140*np.cos(theta3 + theta4) - 37*np.sin(theta3 + theta4)*np.sin(theta5) + 37*np.cos(theta3 + theta4)*np.cos(theta5) + 40*np.cos(theta3 + theta4)*np.sin(theta5)*np.sin(theta6) + 40*np.sin(theta3 + theta4)*np.cos(theta5)*np.sin(theta6)))/100
+    J35 =(np.sin(theta2)*(37*np.cos(theta3 + theta4 + theta5) + 40*np.sin(theta3 + theta4 + theta5)*np.sin(theta6)))/100
+    J36 =(2*np.cos(theta3)*np.cos(theta6)*np.sin(theta2)*np.sin(theta4)*np.sin(theta5))/5 - (2*np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.cos(theta6)*np.sin(theta2))/5 - (2*np.cos(theta2)*np.sin(theta6))/5 + (2*np.cos(theta4)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta5))/5 + (2*np.cos(theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta3)*np.sin(theta4))/5
+    J37 =0
+    J41 =0
+    J42 =np.cos(theta1)
+    J43 =np.sin(theta1)*np.sin(theta2)
+    J44 =np.sin(theta1)*np.sin(theta2)
+    J45 =np.sin(theta1)*np.sin(theta2)
+    J46 =np.cos(theta1)*np.cos(theta3)*np.cos(theta4)*np.cos(theta5) - np.cos(theta1)*np.cos(theta3)*np.sin(theta4)*np.sin(theta5) - np.cos(theta1)*np.cos(theta4)*np.sin(theta3)*np.sin(theta5) - np.cos(theta1)*np.cos(theta5)*np.sin(theta3)*np.sin(theta4) - np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta1)*np.sin(theta5) - np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta1)*np.sin(theta4) - np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1)*np.sin(theta3) + np.cos(theta2)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)
+    J47 =np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)) + np.sin(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta1)*np.cos(theta3) - np.cos(theta2)*np.sin(theta1)*np.sin(theta3)) - np.sin(theta4)*(np.cos(theta1)*np.sin(theta3) + np.cos(theta2)*np.cos(theta3)*np.sin(theta1)))) + np.cos(theta6)*np.sin(theta1)*np.sin(theta2)
+    J51 =0
+    J52 =np.sin(theta1)
+    J53 =np.cos(theta6)*(np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) - np.cos(theta1)*np.cos(theta6)*np.sin(theta2)) - np.cos(theta7)*np.sin(theta6)*(np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) + np.sin(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))))) - np.sin(theta6)*np.sin(theta7)*(np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) - np.cos(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)))))
+    J54 =np.cos(theta6)*(np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) - np.cos(theta1)*np.cos(theta6)*np.sin(theta2)) - np.cos(theta7)*np.sin(theta6)*(np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) + np.sin(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))))) - np.sin(theta6)*np.sin(theta7)*(np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) - np.cos(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)))))
+    J55 =np.cos(theta6)*(np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) - np.cos(theta1)*np.cos(theta6)*np.sin(theta2)) - np.cos(theta7)*np.sin(theta6)*(np.cos(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) + np.sin(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))))) - np.sin(theta6)*np.sin(theta7)*(np.sin(theta7)*(np.cos(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) + np.cos(theta1)*np.sin(theta2)*np.sin(theta6)) - np.cos(theta7)*(np.cos(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3))) - np.sin(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)))))
+    J56 =np.cos(theta3)*np.cos(theta4)*np.cos(theta5)*np.sin(theta1) - np.cos(theta3)*np.sin(theta1)*np.sin(theta4)*np.sin(theta5) - np.cos(theta4)*np.sin(theta1)*np.sin(theta3)*np.sin(theta5) - np.cos(theta5)*np.sin(theta1)*np.sin(theta3)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta4)*np.sin(theta5) + np.cos(theta1)*np.cos(theta2)*np.cos(theta3)*np.cos(theta5)*np.sin(theta4) + np.cos(theta1)*np.cos(theta2)*np.cos(theta4)*np.cos(theta5)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.sin(theta3)*np.sin(theta4)*np.sin(theta5)
+    J57 =np.sin(theta6)*(np.cos(theta5)*(np.cos(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)) + np.sin(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3))) + np.sin(theta5)*(np.cos(theta4)*(np.cos(theta3)*np.sin(theta1) + np.cos(theta1)*np.cos(theta2)*np.sin(theta3)) - np.sin(theta4)*(np.sin(theta1)*np.sin(theta3) - np.cos(theta1)*np.cos(theta2)*np.cos(theta3)))) - np.cos(theta1)*np.cos(theta6)*np.sin(theta2)
+    J61 =(np.cos(theta2)*np.cos(theta6) - np.cos(theta3 + theta4 + theta5)*np.sin(theta2)*np.sin(theta6))**2 + (np.cos(theta2)*np.cos(theta7)*np.sin(theta6) - np.sin(theta3 + theta4 + theta5)*np.sin(theta2)*np.sin(theta7) + np.cos(theta3 + theta4 + theta5)*np.cos(theta6)*np.cos(theta7)*np.sin(theta2))**2 + (np.cos(theta2)*np.sin(theta6)*np.sin(theta7) + np.sin(theta3 + theta4 + theta5)*np.cos(theta7)*np.sin(theta2) + np.cos(theta3 + theta4 + theta5)*np.cos(theta6)*np.sin(theta2)*np.sin(theta7))**2
+    J62 =0
+    J63 =np.cos(theta2)
+    J64 =np.cos(theta2)
+    J65 =np.cos(theta2)
+    J66 =np.cos(theta3 - theta2 + theta4 + theta5)/2 - np.cos(theta2 + theta3 + theta4 + theta5)/2
+    J67 =np.cos(theta2)*np.cos(theta6) - np.cos(theta3 + theta4 + theta5)*np.sin(theta2)*np.sin(theta6)
 
     J = np.array([[J11, J12, J13, J14, J15, J16, J17],
     [J21, J22, J23, J24, J25, J26, J27],
@@ -662,35 +74,57 @@ for i in range(100000):
     [J51, J52, J53, J54, J55, J56, J57],
     [J61, J62, J63, J64, J65, J66, J67]])
 
-    delta_u_initial = np.array([random.uniform(-1.5, 3.5), random.uniform(-1, 1), random.uniform(0, 2),random.uniform(-np.pi/2,np.pi/2),random.uniform(-np.pi/2,np.pi/2),random.uniform(-np.pi/2,np.pi/2)])
+    delta_u_initial = np.array([random.uniform(-1.5, 3.5), random.uniform(-1, 1), random.uniform(0, 2), random.uniform(-np.pi/2,np.pi/2),random.uniform(-np.pi/2,np.pi/2),random.uniform(-np.pi/2,np.pi/2)])
 
-    delta_u = delta_u_initial / np.linalg.norm(delta_u_initial) * 0.01
-    omega = np.dot(np.array([[0, -np.sin(delta_u[3]), np.cos(delta_u[3]) * np.cos(delta_u[4])],
-    [0, np.cos(delta_u[5]), np.sin(delta_u[3]) * np.cos(delta_u[4])],
-    [1, 0, -np.sin(delta_u[4])]]), [[delta_u[3]],[delta_u[4]], [delta_u[5]]])
+    Pos_EE, quat_EE = predict_model(np.array([theta1,theta2,theta3,theta4,theta5,theta6,theta7]))
+    target_pos = [random.uniform(1.5, 3.5), random.uniform(-1, 1), random.uniform(0, 2)]
+    target_quat = [random.uniform(0,1), random.uniform(-1,1), random.uniform(-1,1),random.uniform(-1,1)]
+    q_Target = target_quat/np.linalg.norm(target_quat)
+
+    pos_Target_EE = target_pos - Pos_EE
+    distance = np.linalg.norm(pos_Target_EE)
+    pos_Target_EE_norm = pos_Target_EE / distance * 0.2
+
+
+    del_q = (q_Target - quat_EE) / np.linalg.norm(q_Target - quat_EE) * 0.01
+
+    # del_q = (q_Target - quat_EE) * 0.01
+
+    Matrix1 = [[quat_EE[0], -quat_EE[1], -quat_EE[2], -quat_EE[3]], [quat_EE[1], quat_EE[0], -quat_EE[3], quat_EE[2]],
+               [quat_EE[2], quat_EE[3], quat_EE[0], -quat_EE[1]], [quat_EE[3], -quat_EE[2], quat_EE[1], quat_EE[0]]]
+    omega_angle1 = 2 * np.dot(np.linalg.inv(Matrix1), del_q)
+    omega_angle = omega_angle1[1:]
+
+    delta_u1 = pos_Target_EE_norm
+    delta_u2 = omega_angle
+
+    # omega = np.dot(np.array([[0, -np.sin(delta_u[3]), np.cos(delta_u[3]) * np.cos(delta_u[4])],
+    # [0, np.cos(delta_u[5]), np.sin(delta_u[3]) * np.cos(delta_u[4])],
+    # [1, 0, -np.sin(delta_u[4])]]), [[delta_u[3]],[delta_u[4]], [delta_u[5]]])
 
     # 输出动作（其实是末端运动目标速度）
-    delta_error = [delta_u[0], delta_u[1], delta_u[2], omega[0], omega[1], omega[2]]
+    delta_error = np.array([delta_u1[0], delta_u1[1], delta_u1[2], delta_u2[0], delta_u2[1], delta_u2[2]])
 
     # 期望的关节运动角速度
     del_q = np.dot(np.linalg.pinv(J), delta_error)
 
-    input_data1 = np.array([theta1, theta2, theta3,theta4,theta5,theta6,theta7, delta_u[0], delta_u[1], delta_u[2], delta_u[3], delta_u[4], delta_u[5]])
+    input_data1 = np.array([theta1, theta2, theta3,theta4,theta5,theta6,theta7, pos_Target_EE_norm[0], pos_Target_EE_norm[1], pos_Target_EE_norm[2], quat_EE[0], quat_EE[1], quat_EE[2], quat_EE[3], target_quat[0],target_quat[1],target_quat[2],target_quat[3]])
     output_data1 = np.array([del_q[0],del_q[1],del_q[2],del_q[3],del_q[4],del_q[5],del_q[6]])
-    total_data1 = np.array([theta1, theta2, theta3,theta4,theta5,theta6,theta7, delta_u[0], delta_u[1], delta_u[2], delta_u[3], delta_u[4], delta_u[5],\
-                            del_q[0][0],del_q[1][0],del_q[2][0],del_q[3][0],del_q[4][0],del_q[5][0],del_q[6][0]])
+    total_data1 = np.array([theta1, theta2, theta3,theta4,theta5,theta6,theta7, quat_EE[0], quat_EE[1], quat_EE[2], quat_EE[3], target_quat[0],target_quat[1],target_quat[2],target_quat[3],\
+                            del_q[0],del_q[1],del_q[2],del_q[3],del_q[4],del_q[5],del_q[6]])
     input_data.append(input_data1)
     output_data.append(output_data1)
-    total_data[input_data1]=output_data1
-    if i % 1000 == 999:
+    # total_data[input_data1] = output_data1
+
+    if (i+1) % 10000 == 0:
         print(i)
 
 np.save("input_data", input_data)
 np.save("output_data", output_data)
-np.save("total_data", total_data)
+# np.save("total_data", total_data)
 
 np.load("input_data.npy")
 np.load("output_data.npy")
-print(np.load("total_data.npy"))
+# print(np.load("total_data.npy", allow_pickle=True))
 
 

@@ -19,7 +19,7 @@ torch.set_default_dtype(torch.float)
 # current_file = os.path.abspath(os.path.join(os.getcwd(), ".."))  # 获取上一级目录的名字
 current_file = os.getcwd()  # 获取当前目录的名字
 date_save = "0612-1"
-date_load = "0617"
+date_load = "0913"
 directory_save = current_file + '/train_log/' + '/' + date_save
 directory_load = current_file + '/train_log/' + '/' + date_load
 
@@ -39,20 +39,20 @@ class Actor(nn.Module):
         # self.action_bound = torch.FloatTensor(action_bound)
 
         # layer
-        self.l1 = nn.Linear(state_dim, 300)
+        self.l1 = nn.Linear(state_dim, 100)
         # 初始化神经网络的参数的两种方式
         # nn.init.normal_(self.l1.weight, -0.0, 0.001)
         # nn.init.constant_(self.l1.bias, 0.001)
         # self.l1.weight.data.normal_(0.,0.001)
         # self.l1.bias.data.fill_(0.001)
 
-        self.l2 = nn.Linear(300, 500)
-        self.l3 = nn.Linear(500, 1000)
-        self.l4 = nn.Linear(1000, 1500)
-        self.l5 = nn.Linear(1500, 1000)
-        self.l6 = nn.Linear(1000, 500)
-        self.l7 = nn.Linear(500, 300)
-        self.l8 = nn.Linear(300, action_dim)
+        self.l2 = nn.Linear(100, 300)
+        self.l3 = nn.Linear(300, 500)
+        self.l4 = nn.Linear(500, 1000)
+        self.l5 = nn.Linear(1000, 500)
+        self.l6 = nn.Linear(500, 300)
+        self.l7 = nn.Linear(300, 100)
+        self.l8 = nn.Linear(100, action_dim)
         # self.l8.weight.data.normal_(-0.0, 0.001)
         # self.l8.bias.data.fill_(0.001)
 
@@ -142,7 +142,12 @@ class DDPG(object):
         return self.memory[indices, :]
 
     def choose_action_train(self, s):
-        s = torch.FloatTensor(s).to(device)
+        Pos_Target_EE = s[10:13]
+        distance = np.linalg.norm(Pos_Target_EE)
+        delta_Pos = Pos_Target_EE / distance
+        s_norm = np.concatenate((s[0:7], delta_Pos[:], s[10:]))
+
+        s = torch.FloatTensor(s_norm).to(device)
         action_ = self.actor(s)
         action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=7)).to(device)
         action = action_ + action_noise
@@ -241,9 +246,9 @@ class DDPG(object):
 
     def load(self):
         self.actor_target.load_state_dict(
-            torch.load(directory_load + "/" + "7999_actor.pth"))
+            torch.load(directory_load + "/" + "499_actor.pth"))
         self.actor.load_state_dict(
-            torch.load(directory_load + "/" + "7999_actor.pth"))
+            torch.load(directory_load + "/" + "499_actor.pth"))
         # self.critic.load_state_dict(
         #     torch.load(directory_load + "/" + "7999_critic.pth"))
         # self.critic_target.load_state_dict(

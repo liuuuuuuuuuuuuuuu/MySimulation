@@ -5,17 +5,31 @@
       <paths name="root@region-3.autodl.com:43842">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/Arm_7dof_single" />
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/Arm_7dof_single/position_control/DDPG1_7_Pos/train_log" />
           </excludedPaths>
         </serverdata>
       </paths>
+      <paths name="root@region-4.autodl.com:39046">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="root@region-4.autodl.com:45279">
         <serverdata>
           <mappings>
             <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$/Arm_7dof_single" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@region-41.autodl.com:22740">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/pycharm_liujian_0908" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
