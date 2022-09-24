@@ -52,9 +52,10 @@ def predict_model(input_data):
     r = R.from_matrix(Rotation33)
     rot_quat = r.as_quat()
     postion = R0_8L44[:3, 3]
+    pos_quat_total = np.concatenate((postion, rot_quat))
 
-    return postion, rot_quat
+    return postion, rot_quat, pos_quat_total
 
 if __name__ == '__main__':
-    aa, bb = predict_model(np.array([30, 10, 20, 20, 40, 50, 60]) * np.pi / 180)
-    print(aa, "\n", bb)
+    aa, bb, cc = predict_model(np.array([30, 10, 20, 20, 40, 50, 60]) * np.pi / 180)
+    print(aa, "\n", bb,"\n", cc)

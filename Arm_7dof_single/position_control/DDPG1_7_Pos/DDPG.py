@@ -39,20 +39,17 @@ class Actor(nn.Module):
         # self.action_bound = torch.FloatTensor(action_bound)
 
         # layer
-        self.l1 = nn.Linear(state_dim, 100)
+        self.l1 = nn.Linear(state_dim, 128)
         # 初始化神经网络的参数的两种方式
         # nn.init.normal_(self.l1.weight, -0.0, 0.001)
         # nn.init.constant_(self.l1.bias, 0.001)
         # self.l1.weight.data.normal_(0.,0.001)
         # self.l1.bias.data.fill_(0.001)
 
-        self.l2 = nn.Linear(100, 300)
-        self.l3 = nn.Linear(300, 500)
-        self.l4 = nn.Linear(500, 1000)
-        self.l5 = nn.Linear(1000, 500)
-        self.l6 = nn.Linear(500, 300)
-        self.l7 = nn.Linear(300, 100)
-        self.l8 = nn.Linear(100, action_dim)
+        self.l2 = nn.Linear(128, 256)
+        self.l3 = nn.Linear(256, 256)
+        self.l4 = nn.Linear(256, 128)
+        self.l5 = nn.Linear(128, action_dim)
         # self.l8.weight.data.normal_(-0.0, 0.001)
         # self.l8.bias.data.fill_(0.001)
 
@@ -61,11 +58,8 @@ class Actor(nn.Module):
         x = F.relu(self.l2(x))
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
-        x = F.relu(self.l5(x))
-        x = F.relu(self.l6(x))
-        x = F.relu(self.l7(x))
-        x = torch.tanh(self.l8(x))
-        x = x*0.1
+        x = torch.tanh(self.l5(x))
+        x = x
 
 
         # 对action进行放缩，实际上a in [-1,1]
@@ -79,15 +73,12 @@ class Critic(nn.Module):
 
     def __init__(self, state_dim, action_dim, n_hidden_layer=300):
         super(Critic, self).__init__()
-        self.ls = nn.Linear(state_dim, 300)
-        self.la = nn.Linear(action_dim, 300)
-        self.l2 = nn.Linear(300, 300)
-        self.l3 = nn.Linear(300, 500)
-        self.l4 = nn.Linear(500, 1000)
-        self.l5 = nn.Linear(1000, 500)
-        self.l6 = nn.Linear(500, 300)
-        self.l7 = nn.Linear(300, 300)
-        self.l8 = nn.Linear(300, 1)
+        self.ls = nn.Linear(state_dim, 128)
+        self.la = nn.Linear(action_dim, 128)
+        self.l2 = nn.Linear(128, 256)
+        self.l3 = nn.Linear(256, 128)
+        self.l4 = nn.Linear(128, 64)
+        self.l5 = nn.Linear(64, 1)
 
     def forward(self, s, a):
         x = self.ls(s)
@@ -96,10 +87,7 @@ class Critic(nn.Module):
         x = F.relu(self.l2(x))
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
-        x = F.relu(self.l5(x))
-        x = F.relu(self.l6(x))
-        x = F.relu(self.l7(x))
-        q_val = self.l8(x)
+        q_val = self.l5(x)
         return q_val
 
 
@@ -150,15 +138,16 @@ class DDPG(object):
         s = torch.FloatTensor(s_norm).to(device)
         action_ = self.actor(s)
         action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=7)).to(device)
-        action = action_ + action_noise
+        # action = action_ + action_noise
+        action = action_
         action = action.detach().cpu()
-        action = np.clip(action, -0.1 / 180 * np.pi, 0.1 / 180 * np.pi)
+        action = np.clip(action, -1 / 180 * np.pi, 1 / 180 * np.pi)
         return action
 
     def choose_action_test(self, s):
         s = torch.FloatTensor(s).to(device)
         action = self.actor(s).detach().cpu()
-        action = np.clip(action, -0.1 / 180 * np.pi, 0.1 / 180 * np.pi)
+        action = np.clip(action, -1 / 180 * np.pi, 1 / 180 * np.pi)
         return action
 
     def learn(self):

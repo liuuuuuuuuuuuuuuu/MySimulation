@@ -7,6 +7,7 @@ from DDPG import DDPG
 import argparse
 
 from test_jacobain import Jacobian_inverse
+from choose_action_random import action_random
 
 # 设置参数变量
 # (1) 声明一个parser（解析器）
@@ -31,7 +32,7 @@ parser.add_argument('--MAX_EPISODES_TRAIN', default=5000, type=int,
                     help='Max number of total train episodes:(default:100)')
 parser.add_argument('--MAX_EPISODES_TEST', default=500, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=3000, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=10000, type=int,
                     help='Max number of steps per episode (default: 1000')
 parser.add_argument('--explore_noise', default=0.0001, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
@@ -78,7 +79,7 @@ if __name__ == '__main__':
         agent.load()
         ep_reward_total1 = []
         for i in range(args.MAX_EPISODES_TEST):
-            s = env.reset()
+            s, info = env.reset()
             ep_reward = 0
             for j in range(args.MAX_EP_STEPS):
                 # if i > 50:
@@ -86,7 +87,7 @@ if __name__ == '__main__':
                 env.render()
 
                 # Add exploration noise
-                action = agent.choose_action_train(s)
+                action = agent.choose_action_test(s)
                 # action = action + s[0:7]
                 action = action + s[0:7]
 
@@ -115,7 +116,7 @@ if __name__ == '__main__':
             agent.load()
         result_ep_reward = []
         for i in range(args.MAX_EPISODES_TRAIN):
-            s = env.reset()
+            s, info = env.reset()
             ep_reward = 0
             for j in range(args.MAX_EP_STEPS):
                 # if  45 < j:
@@ -126,13 +127,19 @@ if __name__ == '__main__':
                 action_agent = agent.choose_action_train(s)
                 # action = np.clip(action, -a_bound, a_bound)
 
-                action_jacobian = Jacobian_inverse(s[:18])
-                action = action_jacobian + s[0:7]
-                # action = np.zeros(7)
+                action_new = action_random(info["joint_position"], info["pos_Target_EE"], info["attitude_error"],\
+                                           action_agent, info["Target_total"])
+                action_new = np.clip(action_new, -1 / 180 * np.pi, 1 / 180 * np.pi)
+                action_new = action_new + s[0:7]
 
-                s_, r, done, info = env.step(action)
+                # action_jacobian = Jacobian_inverse(s[:18])
+                # action = action_jacobian + s[0:7]
+                # # action = np.zeros(7)
 
-                agent.store_transition(s, action, r, s_)
+                s_, r, done, info = env.step(action_new)
+                print(info["reward"])
+
+                agent.store_transition(s, action_new, r, s_)
 
                 if agent.pointer > args.MEMORY_CAPACITY:
                     agent.learn()
