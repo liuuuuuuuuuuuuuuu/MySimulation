@@ -28,15 +28,15 @@ parser.add_argument('--seed', type=int, default=615,
 
 parser.add_argument('--env', default='Arm-v3',
                     help='environment to train on (default: Arm-v3)')
-parser.add_argument('--MAX_EPISODES_TRAIN', default=5000, type=int,
+parser.add_argument('--MAX_EPISODES_TRAIN', default=1000, type=int,
                     help='Max number of total train episodes:(default:100)')
-parser.add_argument('--MAX_EPISODES_TEST', default=500, type=int,
+parser.add_argument('--MAX_EPISODES_TEST', default=5000, type=int,
                     help='Max number of total test episodes:(default:100)')
-parser.add_argument('--MAX_EP_STEPS', default=10000, type=int,
+parser.add_argument('--MAX_EP_STEPS', default=4000, type=int,
                     help='Max number of steps per episode (default: 1000')
 parser.add_argument('--explore_noise', default=0.0001, type=int,
                     help='探索随机的方差‘ (default: 0.0002')
-parser.add_argument('--MEMORY_CAPACITY', default=200000, type=int,
+parser.add_argument('--MEMORY_CAPACITY', default=400000, type=int,
                     help='Max number of memory_capacity (default: 20000')
 parser.add_argument('--mode', default='train', type=str,
                     help="mode='train' or 'test' (default: test)")
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             for j in range(args.MAX_EP_STEPS):
                 # if  45 < j:
                 #     env.render()
-                env.render()
+                # env.render()
 
                 # Add exploration noise
                 action_agent = agent.choose_action_train(s)
@@ -137,7 +137,7 @@ if __name__ == '__main__':
                 # # action = np.zeros(7)
 
                 s_, r, done, info = env.step(action_new)
-                print(info["reward"])
+                # print(info["reward"])
 
                 agent.store_transition(s, action_new, r, s_)
 
@@ -152,8 +152,8 @@ if __name__ == '__main__':
                     result1=np.array(['Episode:', i, "done: ", done, ' Reward:', int(ep_reward),
                           'Explore:', args.explore_noise])
                     result_total.append(result1)
-                    print(info)
-                    # print(info['distance'])
+                    # print(info)
+                    print(info['distance'])
                     break
 
             result_ep_reward.append(ep_reward)

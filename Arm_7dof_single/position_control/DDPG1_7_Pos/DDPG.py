@@ -18,8 +18,8 @@ torch.set_default_dtype(torch.float)
 
 # current_file = os.path.abspath(os.path.join(os.getcwd(), ".."))  # 获取上一级目录的名字
 current_file = os.getcwd()  # 获取当前目录的名字
-date_save = "0612-1"
-date_load = "0913"
+date_save = "0925"
+date_load = "0925"
 directory_save = current_file + '/train_log/' + '/' + date_save
 directory_load = current_file + '/train_log/' + '/' + date_load
 
@@ -59,7 +59,7 @@ class Actor(nn.Module):
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
         x = torch.tanh(self.l5(x))
-        x = x
+        x = x*1/180*np.pi
 
 
         # 对action进行放缩，实际上a in [-1,1]
