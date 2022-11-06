@@ -18,8 +18,8 @@ torch.set_default_dtype(torch.float)
 
 # current_file = os.path.abspath(os.path.join(os.getcwd(), ".."))  # 获取上一级目录的名字
 current_file = os.getcwd()  # 获取当前目录的名字
-date_save = "0925"
-date_load = "0925"
+date_save = "1104"
+date_load = "1104"
 directory_save = current_file + '/train_log/' + '/' + date_save
 directory_load = current_file + '/train_log/' + '/' + date_load
 
@@ -59,7 +59,7 @@ class Actor(nn.Module):
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
         x = torch.tanh(self.l5(x))
-        x = x*1/180*np.pi
+        x = x * 0.1
 
 
         # 对action进行放缩，实际上a in [-1,1]
@@ -93,8 +93,8 @@ class Critic(nn.Module):
 
 # Deep Deterministic Policy Gradient
 class DDPG(object):
-    def __init__(self, state_dim, action_dim, replacement,  explore_noise, memory_capacity=1000, gamma=0.9, lr_a=0.0001,
-                 lr_c=0.0001, batch_size=2048):
+    def __init__(self, state_dim, action_dim, replacement,  explore_noise, memory_capacity=1000, gamma=0.9, lr_a=0.001,
+                 lr_c=0.001, batch_size=32):
         super(DDPG, self).__init__()
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -136,18 +136,18 @@ class DDPG(object):
         s_norm = np.concatenate((s[0:7], delta_Pos[:], s[10:]))
 
         s = torch.FloatTensor(s_norm).to(device)
-        action_ = self.actor(s)
-        action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=7)).to(device)
+        action_ = self.actor(s) / 180 * np.pi #弧度制
+        # action_noise = torch.FloatTensor(np.random.normal(0, scale=self.explore_noise, size=7)).to(device)
         # action = action_ + action_noise
         action = action_
         action = action.detach().cpu()
-        action = np.clip(action, -1 / 180 * np.pi, 1 / 180 * np.pi)
-        return action
+        action = np.clip(action, -0.2 / 180 * np.pi, 0.2 / 180 * np.pi)
+        return action #弧度制
 
     def choose_action_test(self, s):
         s = torch.FloatTensor(s).to(device)
-        action = self.actor(s).detach().cpu()
-        action = np.clip(action, -1 / 180 * np.pi, 1 / 180 * np.pi)
+        action = self.actor(s).detach().cpu() / 180 * np.pi
+        action = np.clip(action, -0.2 / 180 * np.pi, 0.2 / 180 * np.pi)
         return action
 
     def learn(self):
@@ -197,10 +197,17 @@ class DDPG(object):
         br = torch.FloatTensor(bm[:, -self.state_dim - 1: -self.state_dim]).to(device)
         bs_ = torch.FloatTensor(bm[:, -self.state_dim:]).to(device)
 
-        # 训练Actor
+        # # 利用最大化q训练Actor
+        # a = self.actor(bs)
+        # q = self.critic(bs, a)
+        # a_loss = -torch.mean(q)
+        # self.actor_optimizer.zero_grad()
+        # a_loss.backward(retain_graph=True)
+        # self.actor_optimizer.step()
+
+        # 利用最小化a的均方误差训练actor、
         a = self.actor(bs)
-        q = self.critic(bs, a)
-        a_loss = -torch.mean(q)
+        a_loss = self.mse_loss(a, ba)
         self.actor_optimizer.zero_grad()
         a_loss.backward(retain_graph=True)
         self.actor_optimizer.step()
@@ -235,9 +242,9 @@ class DDPG(object):
 
     def load(self):
         self.actor_target.load_state_dict(
-            torch.load(directory_load + "/" + "499_actor.pth"))
+            torch.load(directory_load + "/" + "949_actor.pth"))
         self.actor.load_state_dict(
-            torch.load(directory_load + "/" + "499_actor.pth"))
+            torch.load(directory_load + "/" + "949_actor.pth"))
         # self.critic.load_state_dict(
         #     torch.load(directory_load + "/" + "7999_critic.pth"))
         # self.critic_target.load_state_dict(

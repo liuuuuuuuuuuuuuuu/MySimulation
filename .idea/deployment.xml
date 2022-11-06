@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="root@region-4.autodl.com:39046" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="root@region-3.autodl.com:43842">
         <serverdata>
@@ -26,10 +26,38 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="root@region-4.seetacloud.com:50025">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/remote_liujian_1102" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="root@region-41.autodl.com:22740">
         <serverdata>
           <mappings>
             <mapping deploy="/tmp/pycharm_liujian_0908" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@region-41.seetacloud.com:21134">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@region-41.seetacloud.com:35353">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/romote_file_liujian" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@region-41.seetacloud.com:52593">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/liujian_1101" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

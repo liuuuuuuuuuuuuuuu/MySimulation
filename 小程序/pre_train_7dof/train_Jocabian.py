@@ -86,13 +86,13 @@ for i in range(500000):
     pos_Target_EE_norm = pos_Target_EE / distance * 0.2
 
 
-    del_q = (q_Target - quat_EE) / np.linalg.norm(q_Target - quat_EE) * 0.01
+    del_q_T_E = (q_Target - quat_EE) / np.linalg.norm(q_Target - quat_EE) * 0.01
 
     # del_q = (q_Target - quat_EE) * 0.01
 
     Matrix1 = [[quat_EE[0], -quat_EE[1], -quat_EE[2], -quat_EE[3]], [quat_EE[1], quat_EE[0], -quat_EE[3], quat_EE[2]],
                [quat_EE[2], quat_EE[3], quat_EE[0], -quat_EE[1]], [quat_EE[3], -quat_EE[2], quat_EE[1], quat_EE[0]]]
-    omega_angle1 = 2 * np.dot(np.linalg.inv(Matrix1), del_q)
+    omega_angle1 = 2 * np.dot(np.linalg.inv(Matrix1), del_q_T_E)
     omega_angle = omega_angle1[1:]
 
     delta_u1 = pos_Target_EE_norm
@@ -106,7 +106,8 @@ for i in range(500000):
     delta_error = np.array([delta_u1[0], delta_u1[1], delta_u1[2], delta_u2[0], delta_u2[1], delta_u2[2]])
 
     # 期望的关节运动角速度
-    del_q = np.dot(np.linalg.pinv(J), delta_error)
+    del_q = np.dot(np.linalg.pinv(J), delta_error)*180/np.pi
+    del_q = np.clip(del_q, -5, 5)
 
     input_data1 = np.array([theta1, theta2, theta3,theta4,theta5,theta6,theta7, pos_Target_EE_norm[0], pos_Target_EE_norm[1], pos_Target_EE_norm[2], quat_EE[0], quat_EE[1], quat_EE[2], quat_EE[3], target_quat[0],target_quat[1],target_quat[2],target_quat[3]])
     output_data1 = np.array([del_q[0],del_q[1],del_q[2],del_q[3],del_q[4],del_q[5],del_q[6]])

@@ -51,11 +51,15 @@ def predict_model(input_data):
 
     r = R.from_matrix(Rotation33)
     rot_quat = r.as_quat()
+    # 注意：此时四元数为[q1, q2, q3, q0],需要进一步转换
+    rot_quat = np.array([rot_quat[3], rot_quat[0], rot_quat[1], rot_quat[2]])
+    if rot_quat[0] < 0:
+        rot_quat = rot_quat * -1
     postion = R0_8L44[:3, 3]
     pos_quat_total = np.concatenate((postion, rot_quat))
 
     return postion, rot_quat, pos_quat_total
 
 if __name__ == '__main__':
-    aa, bb, cc = predict_model(np.array([30, 10, 20, 20, 40, 50, 60]) * np.pi / 180)
+    aa, bb, cc = predict_model(np.array([0.23, 1.57, 0.66, -2.41, 0.18, -1.34, 0.45]))
     print(aa, "\n", bb,"\n", cc)

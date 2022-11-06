@@ -31,4 +31,5 @@ def QuaternionToEulerAngles(q0,q1,q2,q3):
     print()
 if __name__ == '__main__':
     EulerToQuaternion(30, 120, 30)
-    QuaternionToEulerAngles(0.8, 0.035, 0.567,-0.117)
+    QuaternionToEulerAngles(0.66798,0.05964,0.71749,-0.18830)
+    QuaternionToEulerAngles(0.58289,-0.02828,0.81017,-0.05544)
